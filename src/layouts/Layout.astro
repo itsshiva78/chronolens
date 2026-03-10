@@ -9,6 +9,7 @@ const { title, description = "Travel through time. See the world as it was.", de
 
 import '../styles/global.css';
 import InfoModal from '../components/InfoModal.astro';
+import Analytics from '@vercel/analytics/astro';
 ---
 
 <!doctype html>
@@ -52,6 +53,8 @@ import InfoModal from '../components/InfoModal.astro';
     <main>
       <slot />
     </main>
+
+    <Analytics />
 
     <InfoModal />
 
