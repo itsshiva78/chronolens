@@ -1,0 +1,323 @@
+{
+    "1950s": {
+        "name": "The 1950s",
+        "tagline": "The Age of Innocence & Rock 'n' Roll",
+        "color_primary": "#D4A574",
+        "color_secondary": "#8B6914",
+        "years": [
+            1950,
+            1955
+        ],
+        "vibe": "Post-war optimism, suburbia boom, birth of rock 'n' roll, Cold War begins",
+        "defining_events": [
+            "Korean War",
+            "Rosa Parks & Civil Rights movement begins",
+            "Disneyland opens",
+            "Polio vaccine",
+            "Sputnik launched (1957)",
+            "Elvis Presley rises"
+        ],
+        "music_icons": [
+            "Elvis Presley",
+            "Chuck Berry",
+            "Frank Sinatra",
+            "Nat King Cole"
+        ],
+        "movie_icons": [
+            "Ben-Hur",
+            "Singin' in the Rain",
+            "Vertigo",
+            "12 Angry Men"
+        ],
+        "tech_breakthroughs": [
+            "Color TV",
+            "First credit card",
+            "Polio vaccine",
+            "Nuclear power",
+            "Transistor radio"
+        ]
+    },
+    "1960s": {
+        "name": "The 1960s",
+        "tagline": "Revolution, Moon Landings & Counterculture",
+        "color_primary": "#9B59B6",
+        "color_secondary": "#E67E22",
+        "years": [
+            1960,
+            1965
+        ],
+        "vibe": "Civil rights, Vietnam, psychedelic culture, the space race, JFK",
+        "defining_events": [
+            "Moon Landing (1969)",
+            "JFK assassination",
+            "Vietnam War escalates",
+            "Martin Luther King Jr. assassination",
+            "Woodstock",
+            "Civil Rights Act"
+        ],
+        "music_icons": [
+            "The Beatles",
+            "Bob Dylan",
+            "Jimi Hendrix",
+            "The Rolling Stones"
+        ],
+        "movie_icons": [
+            "Psycho",
+            "2001: A Space Odyssey",
+            "The Sound of Music",
+            "Bonnie and Clyde"
+        ],
+        "tech_breakthroughs": [
+            "Moon landing",
+            "Birth control pill",
+            "First laser",
+            "ARPANET (proto-internet)",
+            "Communications satellites"
+        ]
+    },
+    "1970s": {
+        "name": "The 1970s",
+        "tagline": "Disco, Watergate & the Energy Crisis",
+        "color_primary": "#8B7355",
+        "color_secondary": "#6B8E23",
+        "years": [
+            1970,
+            1975
+        ],
+        "vibe": "Disco fever, Watergate scandal, oil crisis, environmental movement, punk rock",
+        "defining_events": [
+            "Watergate scandal & Nixon resigns",
+            "Vietnam War ends",
+            "Oil crisis",
+            "First Earth Day",
+            "Star Wars releases (1977)",
+            "Microsoft & Apple founded"
+        ],
+        "music_icons": [
+            "Led Zeppelin",
+            "Pink Floyd",
+            "ABBA",
+            "Bee Gees",
+            "Stevie Wonder"
+        ],
+        "movie_icons": [
+            "The Godfather",
+            "Jaws",
+            "Star Wars",
+            "Rocky",
+            "Taxi Driver"
+        ],
+        "tech_breakthroughs": [
+            "Personal computers (Altair)",
+            "VCR",
+            "Floppy disk",
+            "Microsoft founded (1975)",
+            "Apple founded (1976)"
+        ]
+    },
+    "1980s": {
+        "name": "The 1980s",
+        "tagline": "Neon Lights, MTV & the Digital Revolution",
+        "color_primary": "#FF006E",
+        "color_secondary": "#00F5FF",
+        "years": [
+            1980,
+            1985
+        ],
+        "vibe": "MTV, neon fashion, Cold War peak, personal computing, synthwave",
+        "defining_events": [
+            "Berlin Wall falls (1989)",
+            "MTV launches (1981)",
+            "Chernobyl disaster",
+            "Space Shuttle Challenger",
+            "NES gaming revolution",
+            "Live Aid concert"
+        ],
+        "music_icons": [
+            "Michael Jackson",
+            "Madonna",
+            "Prince",
+            "U2",
+            "Bon Jovi"
+        ],
+        "movie_icons": [
+            "E.T.",
+            "Back to the Future",
+            "The Breakfast Club",
+            "Ghostbusters",
+            "Top Gun"
+        ],
+        "tech_breakthroughs": [
+            "IBM PC / Macintosh",
+            "Nintendo NES",
+            "CD-ROM",
+            "Windows 1.0",
+            "Walkman"
+        ]
+    },
+    "1990s": {
+        "name": "The 1990s",
+        "tagline": "The Internet Age, Grunge & Globalization",
+        "color_primary": "#00D4AA",
+        "color_secondary": "#4169E1",
+        "years": [
+            1990,
+            1995
+        ],
+        "vibe": "World Wide Web, grunge music, dot-com boom, end of Cold War, 90s pop culture",
+        "defining_events": [
+            "World Wide Web goes public",
+            "Nelson Mandela freed & elected",
+            "German reunification",
+            "Oklahoma City bombing",
+            "Windows 95",
+            "Dolly the sheep cloned"
+        ],
+        "music_icons": [
+            "Nirvana",
+            "Tupac",
+            "Spice Girls",
+            "Radiohead",
+            "Backstreet Boys"
+        ],
+        "movie_icons": [
+            "Jurassic Park",
+            "Titanic",
+            "The Matrix",
+            "Forrest Gump",
+            "Toy Story"
+        ],
+        "tech_breakthroughs": [
+            "World Wide Web",
+            "Windows 95",
+            "Google founded",
+            "Amazon & eBay",
+            "DVD",
+            "PlayStation"
+        ]
+    },
+    "2000s": {
+        "name": "The 2000s",
+        "tagline": "Social Media, Smartphones & a New Millennium",
+        "color_primary": "#C0C0C0",
+        "color_secondary": "#1E90FF",
+        "years": [
+            2000,
+            2005
+        ],
+        "vibe": "9/11 aftermath, Iraq War, social media rises, iPod/iPhone, reality TV",
+        "defining_events": [
+            "9/11 attacks (2001)",
+            "Iraq War begins",
+            "Facebook launched (2004)",
+            "YouTube launched (2005)",
+            "Hurricane Katrina",
+            "iPhone announced (2007)"
+        ],
+        "music_icons": [
+            "Eminem",
+            "Beyoncé",
+            "Coldplay",
+            "Kanye West",
+            "50 Cent"
+        ],
+        "movie_icons": [
+            "Lord of the Rings trilogy",
+            "The Dark Knight",
+            "Avatar",
+            "Finding Nemo",
+            "Harry Potter series"
+        ],
+        "tech_breakthroughs": [
+            "iPhone (2007)",
+            "iPod",
+            "Facebook",
+            "YouTube",
+            "Google Maps",
+            "Wikipedia"
+        ]
+    },
+    "2010s": {
+        "name": "The 2010s",
+        "tagline": "Streaming, AI Beginnings & Connectivity",
+        "color_primary": "#7C3AED",
+        "color_secondary": "#06B6D4",
+        "years": [
+            2010,
+            2015
+        ],
+        "vibe": "Streaming revolution, social media dominance, early AI, political division, climate awareness",
+        "defining_events": [
+            "Arab Spring",
+            "Instagram & TikTok rise",
+            "Paris Climate Agreement",
+            "Brexit vote",
+            "Trump elected",
+            "COVID-19 begins (2019/2020)"
+        ],
+        "music_icons": [
+            "Taylor Swift",
+            "Drake",
+            "Ed Sheeran",
+            "Billie Eilish",
+            "BTS"
+        ],
+        "movie_icons": [
+            "Avengers: Endgame",
+            "Frozen",
+            "Black Panther",
+            "Inception",
+            "Star Wars: The Force Awakens"
+        ],
+        "tech_breakthroughs": [
+            "iPad",
+            "Instagram",
+            "Tesla mainstream",
+            "SpaceX reusable rockets",
+            "4G/5G",
+            "Alexa/Siri",
+            "Streaming (Netflix)"
+        ]
+    },
+    "2020s": {
+        "name": "The 2020s",
+        "tagline": "AI Revolution, Pandemic Recovery & New Frontiers",
+        "color_primary": "#10B981",
+        "color_secondary": "#F59E0B",
+        "years": [
+            2020,
+            2025
+        ],
+        "vibe": "COVID pandemic, AI explosion, remote work, climate urgency, space tourism",
+        "defining_events": [
+            "COVID-19 pandemic",
+            "mRNA vaccines",
+            "ChatGPT launches",
+            "AI goes mainstream",
+            "Russia-Ukraine war",
+            "Artemis Moon program"
+        ],
+        "music_icons": [
+            "The Weeknd",
+            "Bad Bunny",
+            "Taylor Swift (Eras)",
+            "Olivia Rodrigo",
+            "Kendrick Lamar"
+        ],
+        "movie_icons": [
+            "Oppenheimer",
+            "Everything Everywhere All at Once",
+            "Top Gun: Maverick",
+            "Spider-Verse",
+            "Wicked"
+        ],
+        "tech_breakthroughs": [
+            "ChatGPT / GPT-4",
+            "Gemini AI",
+            "DALL-E / Midjourney",
+            "Apple Vision Pro",
+            "Humanoid robots",
+            "Quantum computing advances"
+        ]
+    }
+}

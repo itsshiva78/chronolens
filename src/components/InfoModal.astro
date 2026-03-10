@@ -1,0 +1,290 @@
+---
+// InfoModal.astro
+// Global modal for fetching and displaying Wikipedia summaries
+---
+
+<div id="info-modal-backdrop" class="modal-backdrop" data-lenis-prevent>
+  <div id="info-modal" class="modal-content" data-lenis-prevent>
+    <button id="info-modal-close" class="modal-close">&times;</button>
+    <div id="modal-loading" class="modal-loading-state">
+      <div class="spinner"></div>
+      <p>Consulting the archives...</p>
+    </div>
+    <div id="modal-content" class="modal-loaded-state" style="display: none;">
+      <div class="modal-header">
+        <h3 id="modal-title">Title</h3>
+        <p id="modal-description" class="modal-description">Description</p>
+      </div>
+      <div class="modal-body">
+        <img id="modal-image" src="" alt="" class="modal-image" style="display: none;" />
+        <p id="modal-extract" class="modal-extract">Extract...</p>
+      </div>
+      <a id="modal-wiki-link" href="#" target="_blank" rel="noopener noreferrer" class="modal-link">
+        Read full article on Wikipedia &rarr;
+      </a>
+    </div>
+    <div id="modal-error" class="modal-error-state" style="display: none;">
+      <p>Couldn't find detailed information for this topic on Wikipedia. 🌍</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .modal-backdrop.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  .modal-content {
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass-hover);
+    border-radius: var(--radius-lg);
+    width: 90%;
+    max-width: 500px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 2rem;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal-backdrop.open .modal-content {
+    transform: translateY(0) scale(1);
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .modal-close:hover {
+    color: var(--text-primary);
+  }
+  
+  .modal-loading-state, .modal-error-state {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-radius: 50%;
+    border-top-color: var(--accent-primary);
+    animation: spin 1s ease-in-out infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .modal-header { margin-bottom: 1.5rem; }
+  #modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+  }
+  .modal-description {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .modal-image {
+    width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    background: rgba(0,0,0,0.3);
+  }
+  
+  .modal-extract {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+  }
+  
+  .modal-link {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .modal-link:hover {
+    border-color: var(--accent-primary);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const backdrop = document.getElementById('info-modal-backdrop')!;
+    const closeBtn = document.getElementById('info-modal-close')!;
+    const stateLoading = document.getElementById('modal-loading')!;
+    const stateContent = document.getElementById('modal-content')!;
+    const stateError = document.getElementById('modal-error')!;
+    
+    // Elements to populate
+    const elTitle = document.getElementById('modal-title')!;
+    const elDesc = document.getElementById('modal-description')!;
+    const elExtract = document.getElementById('modal-extract')!;
+    const elImage = document.getElementById('modal-image')! as HTMLImageElement;
+    const elLink = document.getElementById('modal-wiki-link')! as HTMLAnchorElement;
+
+    function closeModal() {
+      backdrop.classList.remove('open');
+      document.body.style.overflow = ''; // Fallback for standard scroll
+      if ((window as any).lenis) {
+        (window as any).lenis.start(); // Restore Lenis smooth scrolling
+      }
+      
+      // wait for transition, then reset state
+      setTimeout(() => {
+        stateLoading.style.display = 'block';
+        stateContent.style.display = 'none';
+        stateError.style.display = 'none';
+        elImage.style.display = 'none';
+        elImage.src = '';
+      }, 300);
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
+    });
+
+    // Make global so components can trigger it
+    (window as any).openInfoModal = async function(searchQuery: string, context: string = '') {
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden'; // Fallback for standard scroll
+      if ((window as any).lenis) {
+        (window as any).lenis.stop(); // Prevent Lenis smooth scrolling
+      }
+      
+      stateLoading.style.display = 'block';
+      stateContent.style.display = 'none';
+      stateError.style.display = 'none';
+
+      // Clean up tricky queries like "Donald Trump / Joe Biden"
+      if (searchQuery.includes(' / ')) {
+        searchQuery = searchQuery.split(' / ')[0].trim();
+      }
+
+      try {
+        let exactTitle = searchQuery;
+        let isDirectMatch = false;
+        
+        // Context-aware search booster
+        const contextualQuery = context ? `${searchQuery} ${context}` : searchQuery;
+
+        try {
+           // Try exact name direct hit first
+           const directCheck = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(searchQuery)}`);
+           if (directCheck.ok) {
+             const directData = await directCheck.json();
+             // Prevent it from resolving to a disambiguation page
+             if (directData.type !== 'disambiguation' && directData.title.toLowerCase() === searchQuery.toLowerCase()) {
+               isDirectMatch = true;
+               exactTitle = directData.title;
+             }
+           }
+        } catch(e) { }
+
+        // If direct fetch didn't perfectly match, use the search API
+        if (!isDirectMatch) {
+          // Add context (like 'film', 'song') to the search if the user clicked a specific category
+          const searchRes = await fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(contextualQuery)}&utf8=&format=json&origin=*`);
+          const searchData = await searchRes.json();
+          
+          if (!searchData.query || searchData.query.search.length === 0) {
+            throw new Error('Not found');
+          }
+          
+          // Try to find the best match based on context
+          let bestMatch = null;
+          
+          if (context) {
+             // Priority 1: Title contains both query and context (e.g., "Hold On" AND "song" -> "Hold On (Wilson Phillips song)")
+             bestMatch = searchData.query.search.find((r: any) => r.title.toLowerCase().includes(searchQuery.toLowerCase()) && r.title.toLowerCase().includes(context.toLowerCase()));
+          }
+          
+          if (!bestMatch) {
+             // Priority 2: Title exactly matches the query (e.g., "Home Alone", "Narendra Modi")
+             bestMatch = searchData.query.search.find((r: any) => r.title.toLowerCase() === searchQuery.toLowerCase());
+          }
+
+          // Fallback to top result
+          exactTitle = bestMatch ? bestMatch.title : searchData.query.search[0].title;
+        }
+        
+        // Fetch full summary of that exact title
+        const detailRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(exactTitle)}`);
+        const detailData = await detailRes.json();
+
+        // Populate modal
+        elTitle.textContent = detailData.title || searchQuery;
+        elDesc.textContent = detailData.description || 'Historical Entry';
+        elExtract.innerHTML = detailData.extract_html || detailData.extract || 'No detailed abstract available.';
+        
+        if (detailData.thumbnail && detailData.thumbnail.source) {
+          elImage.src = detailData.thumbnail.source;
+          elImage.style.display = 'block';
+        } else {
+          elImage.style.display = 'none';
+        }
+        
+        elLink.href = detailData.content_urls?.desktop?.page || `https://en.wikipedia.org/wiki/${encodeURIComponent(exactTitle)}`;
+        
+        // Show content
+        stateLoading.style.display = 'none';
+        stateContent.style.display = 'block';
+
+      } catch (e) {
+        console.error("Wiki fetch error:", e);
+        stateLoading.style.display = 'none';
+        stateError.style.display = 'block';
+      }
+    };
+  });
+</script>

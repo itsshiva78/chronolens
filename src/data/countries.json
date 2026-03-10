@@ -1,0 +1,1022 @@
+{
+    "India": {
+        "flag": "🇮🇳",
+        "currency": "₹ (INR)",
+        "years": {
+            "1950": {
+                "leader": "Jawaharlal Nehru (PM)",
+                "population": 376000000,
+                "event": "India becomes a Republic — the Constitution takes effect on January 26",
+                "fun_fact": "India's first general election was being planned, the largest democratic exercise in history"
+            },
+            "1955": {
+                "leader": "Jawaharlal Nehru (PM)",
+                "population": 398000000,
+                "event": "First Five-Year Plan completed — focus on agriculture and dams",
+                "fun_fact": "The Hindu Marriage Act was passed, reforming marriage laws"
+            },
+            "1960": {
+                "leader": "Jawaharlal Nehru (PM)",
+                "population": 449000000,
+                "event": "Bombay state split into Maharashtra and Gujarat",
+                "fun_fact": "India's population crossed 400 million, making it one of the most populous nations"
+            },
+            "1965": {
+                "leader": "Lal Bahadur Shastri (PM)",
+                "population": 499000000,
+                "event": "Indo-Pakistani War of 1965 — ceasefire after 17 days",
+                "fun_fact": "The Green Revolution was about to transform Indian agriculture"
+            },
+            "1970": {
+                "leader": "Indira Gandhi (PM)",
+                "population": 555000000,
+                "event": "Indira Gandhi consolidates power — 'Garibi Hatao' campaign begins",
+                "fun_fact": "India was preparing for the Bangladesh Liberation War (1971)"
+            },
+            "1975": {
+                "leader": "Indira Gandhi (PM)",
+                "population": 623000000,
+                "event": "The Emergency declared — civil liberties suspended for 21 months",
+                "fun_fact": "India launched its first satellite, Aryabhata, into space"
+            },
+            "1980": {
+                "leader": "Indira Gandhi (PM)",
+                "population": 698000000,
+                "event": "Indira Gandhi returns to power after the Janata Party era",
+                "fun_fact": "India's first color TV broadcast was just around the corner (1982)"
+            },
+            "1985": {
+                "leader": "Rajiv Gandhi (PM)",
+                "population": 784000000,
+                "event": "Rajiv Gandhi modernizes India — computerization push begins",
+                "fun_fact": "The Bhopal gas tragedy had just occurred (1984), the world's worst industrial disaster"
+            },
+            "1990": {
+                "leader": "V.P. Singh (PM)",
+                "population": 873000000,
+                "event": "Mandal Commission recommendations implemented — massive protests",
+                "fun_fact": "India was on the brink of an economic crisis that would lead to 1991 liberalization"
+            },
+            "1995": {
+                "leader": "P.V. Narasimha Rao (PM)",
+                "population": 964000000,
+                "event": "India's economy booming post-1991 liberalization — IT sector rising",
+                "fun_fact": "VSNL launched India's first public internet service on August 15"
+            },
+            "2000": {
+                "leader": "Atal Bihari Vajpayee (PM)",
+                "population": 1053000000,
+                "event": "India crosses 1 billion population — major IT boom underway",
+                "fun_fact": "Infosys, Wipro, and TCS were becoming global tech giants"
+            },
+            "2005": {
+                "leader": "Manmohan Singh (PM)",
+                "population": 1147000000,
+                "event": "Right to Information Act passed — landmark transparency law",
+                "fun_fact": "India's economy was growing at 9%+ annually"
+            },
+            "2010": {
+                "leader": "Manmohan Singh (PM)",
+                "population": 1234000000,
+                "event": "Commonwealth Games held in Delhi — India on the world stage",
+                "fun_fact": "Aadhaar (unique ID system) was launched, the world's largest biometric database"
+            },
+            "2015": {
+                "leader": "Narendra Modi (PM)",
+                "population": 1310000000,
+                "event": "Digital India campaign launched — pushing technology to rural areas",
+                "fun_fact": "Mars Orbiter Mission (Mangalyaan) was successfully orbiting Mars, making India the first Asian nation to do so"
+            },
+            "2020": {
+                "leader": "Narendra Modi (PM)",
+                "population": 1380000000,
+                "event": "COVID-19 lockdown — 1.3 billion people under the world's largest lockdown",
+                "fun_fact": "India produced the world's largest number of COVID vaccines (Covishield & Covaxin)"
+            },
+            "2025": {
+                "leader": "Narendra Modi (PM)",
+                "population": 1440000000,
+                "event": "India becomes the world's most populous nation — AI & space ambitions growing",
+                "fun_fact": "ISRO's Chandrayaan-3 had successfully landed on the Moon's south pole (2023)"
+            }
+        }
+    },
+    "United States": {
+        "flag": "🇺🇸",
+        "currency": "$ (USD)",
+        "years": {
+            "1950": {
+                "leader": "Harry S. Truman",
+                "population": 151000000,
+                "event": "Korean War begins — US sends troops to the Korean Peninsula",
+                "fun_fact": "The average American family earned about $3,300 per year"
+            },
+            "1955": {
+                "leader": "Dwight D. Eisenhower",
+                "population": 166000000,
+                "event": "Rosa Parks refuses to give up her seat — Civil Rights movement ignites",
+                "fun_fact": "Disneyland opened in Anaheim, California"
+            },
+            "1960": {
+                "leader": "Dwight D. Eisenhower",
+                "population": 180000000,
+                "event": "JFK elected as the youngest President — 'New Frontier' begins",
+                "fun_fact": "The first televised presidential debates changed politics forever"
+            },
+            "1965": {
+                "leader": "Lyndon B. Johnson",
+                "population": 194000000,
+                "event": "Voting Rights Act signed — landmark civil rights legislation",
+                "fun_fact": "The United States had just entered the Vietnam War in earnest"
+            },
+            "1970": {
+                "leader": "Richard Nixon",
+                "population": 205000000,
+                "event": "Kent State shootings — anti-war protests reach a peak",
+                "fun_fact": "The first Earth Day was celebrated on April 22"
+            },
+            "1975": {
+                "leader": "Gerald Ford",
+                "population": 216000000,
+                "event": "Fall of Saigon — the Vietnam War officially ends",
+                "fun_fact": "Microsoft was founded by Bill Gates and Paul Allen"
+            },
+            "1980": {
+                "leader": "Jimmy Carter",
+                "population": 227000000,
+                "event": "Iran Hostage Crisis dominates the news — Ronald Reagan elected",
+                "fun_fact": "Pac-Man was released and became an instant cultural icon"
+            },
+            "1985": {
+                "leader": "Ronald Reagan",
+                "population": 238000000,
+                "event": "Live Aid concert raises millions — 'We Are the World' era",
+                "fun_fact": "The NES (Nintendo) launched in the US, starting the gaming revolution"
+            },
+            "1990": {
+                "leader": "George H. W. Bush",
+                "population": 249000000,
+                "event": "Gulf War begins — Operation Desert Shield deployed",
+                "fun_fact": "The Hubble Space Telescope was launched into orbit"
+            },
+            "1995": {
+                "leader": "Bill Clinton",
+                "population": 266000000,
+                "event": "Oklahoma City bombing — deadliest domestic terrorism attack at the time",
+                "fun_fact": "Windows 95 launched to massive fanfare — people camped outside stores"
+            },
+            "2000": {
+                "leader": "Bill Clinton",
+                "population": 282000000,
+                "event": "Y2K passes without incident — Bush vs Gore recount drama",
+                "fun_fact": "The dot-com bubble was at its peak before crashing"
+            },
+            "2005": {
+                "leader": "George W. Bush",
+                "population": 296000000,
+                "event": "Hurricane Katrina devastates the Gulf Coast",
+                "fun_fact": "YouTube was founded — the age of online video was born"
+            },
+            "2010": {
+                "leader": "Barack Obama",
+                "population": 309000000,
+                "event": "Affordable Care Act (Obamacare) signed into law",
+                "fun_fact": "Instagram was launched and gained 1 million users in 2 months"
+            },
+            "2015": {
+                "leader": "Barack Obama",
+                "population": 321000000,
+                "event": "Same-sex marriage legalized nationwide by the Supreme Court",
+                "fun_fact": "SpaceX successfully landed a Falcon 9 rocket for the first time"
+            },
+            "2020": {
+                "leader": "Donald Trump",
+                "population": 331000000,
+                "event": "COVID-19 pandemic & George Floyd protests reshape America",
+                "fun_fact": "SpaceX Crew Dragon became the first private spacecraft to carry astronauts to the ISS"
+            },
+            "2025": {
+                "leader": "Donald Trump",
+                "population": 340000000,
+                "event": "AI revolution transforms workplaces — ChatGPT and AI agents go mainstream",
+                "fun_fact": "Artemis program aims to return humans to the Moon this decade"
+            }
+        }
+    },
+    "United Kingdom": {
+        "flag": "🇬🇧",
+        "currency": "£ (GBP)",
+        "years": {
+            "1950": {
+                "leader": "Clement Attlee (PM)",
+                "population": 50600000,
+                "event": "NHS is 2 years old and transforming British healthcare",
+                "fun_fact": "Britain was still recovering from WWII with food rationing in place"
+            },
+            "1955": {
+                "leader": "Anthony Eden (PM)",
+                "population": 51200000,
+                "event": "Winston Churchill retires — Eden takes over as PM",
+                "fun_fact": "ITV launched, breaking the BBC's TV monopoly"
+            },
+            "1960": {
+                "leader": "Harold Macmillan (PM)",
+                "population": 52400000,
+                "event": "'Wind of Change' speech — decolonization of Africa accelerates",
+                "fun_fact": "The Beatles were forming in Liverpool"
+            },
+            "1965": {
+                "leader": "Harold Wilson (PM)",
+                "population": 54400000,
+                "event": "The Beatles receive MBEs from the Queen",
+                "fun_fact": "The death penalty was abolished for murder in Great Britain"
+            },
+            "1970": {
+                "leader": "Edward Heath (PM)",
+                "population": 55600000,
+                "event": "UK struggles with economic challenges — 'three-day week' era approaching",
+                "fun_fact": "The first Glastonbury Festival was held (1970)"
+            },
+            "1975": {
+                "leader": "Harold Wilson (PM)",
+                "population": 56200000,
+                "event": "UK votes to stay in the European Economic Community (EEC)",
+                "fun_fact": "Monty Python and the Holy Grail was released"
+            },
+            "1980": {
+                "leader": "Margaret Thatcher (PM)",
+                "population": 56300000,
+                "event": "Thatcher's economic reforms reshape Britain — 'There is no alternative'",
+                "fun_fact": "John Lennon was assassinated in New York"
+            },
+            "1985": {
+                "leader": "Margaret Thatcher (PM)",
+                "population": 56600000,
+                "event": "Live Aid concert at Wembley raises £150M for Ethiopian famine relief",
+                "fun_fact": "The miners' strike had just ended after a year-long battle"
+            },
+            "1990": {
+                "leader": "Margaret Thatcher (PM)",
+                "population": 57200000,
+                "event": "Thatcher resigns — John Major becomes PM. Poll Tax riots",
+                "fun_fact": "Tim Berners-Lee invented the World Wide Web at CERN"
+            },
+            "1995": {
+                "leader": "John Major (PM)",
+                "population": 58000000,
+                "event": "Channel Tunnel opens — Britain is physically linked to continental Europe",
+                "fun_fact": "Britpop was at its peak — Oasis vs Blur defined the era"
+            },
+            "2000": {
+                "leader": "Tony Blair (PM)",
+                "population": 58900000,
+                "event": "Millennium Dome opens — London celebrates the year 2000",
+                "fun_fact": "The UK had the fastest growing economy in the G7"
+            },
+            "2005": {
+                "leader": "Tony Blair (PM)",
+                "population": 60200000,
+                "event": "London wins bid for 2012 Olympics — 7/7 bombings shock London the next day",
+                "fun_fact": "The UK signed the Kyoto Protocol on climate change"
+            },
+            "2010": {
+                "leader": "David Cameron (PM)",
+                "population": 62800000,
+                "event": "Coalition government formed — first in decades",
+                "fun_fact": "The wedding of Prince William and Kate Middleton was approaching (2011)"
+            },
+            "2015": {
+                "leader": "David Cameron (PM)",
+                "population": 65100000,
+                "event": "Brexit referendum looming — EU debate dominates politics",
+                "fun_fact": "Adele's '25' became the fastest-selling album in UK history"
+            },
+            "2020": {
+                "leader": "Boris Johnson (PM)",
+                "population": 67900000,
+                "event": "Brexit officially happens — UK leaves the EU on January 31",
+                "fun_fact": "Captain Tom Moore raised £33M for the NHS by walking laps in his garden"
+            },
+            "2025": {
+                "leader": "Keir Starmer (PM)",
+                "population": 68300000,
+                "event": "Labour government focuses on economic recovery and green energy",
+                "fun_fact": "King Charles III continues the new era of the British monarchy"
+            }
+        }
+    },
+    "Canada": {
+        "flag": "🇨🇦",
+        "currency": "$ (CAD)",
+        "years": {
+            "1950": {
+                "leader": "Louis St. Laurent (PM)",
+                "population": 13700000,
+                "event": "Post-war immigration boom transforms Canada",
+                "fun_fact": "Canada sent troops to the Korean War as part of the UN force"
+            },
+            "1955": {
+                "leader": "Louis St. Laurent (PM)",
+                "population": 15700000,
+                "event": "Trans-Canada Highway construction underway",
+                "fun_fact": "The Canadian Broadcasting Corporation (CBC) was expanding TV coverage"
+            },
+            "1960": {
+                "leader": "John Diefenbaker (PM)",
+                "population": 17900000,
+                "event": "Canadian Bill of Rights passed — first federal human rights law",
+                "fun_fact": "The Quiet Revolution was beginning in Quebec"
+            },
+            "1965": {
+                "leader": "Lester B. Pearson (PM)",
+                "population": 19600000,
+                "event": "Canada adopts the Maple Leaf flag — replacing the Red Ensign",
+                "fun_fact": "Universal healthcare (Medicare) was being rolled out across provinces"
+            },
+            "1970": {
+                "leader": "Pierre Trudeau (PM)",
+                "population": 21300000,
+                "event": "October Crisis — FLQ kidnappings lead to the War Measures Act",
+                "fun_fact": "Canada was hosting Expo 67's legacy and preparing for the 1976 Olympics"
+            },
+            "1975": {
+                "leader": "Pierre Trudeau (PM)",
+                "population": 23100000,
+                "event": "CN Tower construction completed — tallest free-standing structure in the world",
+                "fun_fact": "Oil prices were reshaping Alberta's economy"
+            },
+            "1980": {
+                "leader": "Pierre Trudeau (PM)",
+                "population": 24500000,
+                "event": "Quebec sovereignty referendum — 'Non' wins with 59.6%",
+                "fun_fact": "Terry Fox began his Marathon of Hope across Canada"
+            },
+            "1985": {
+                "leader": "Brian Mulroney (PM)",
+                "population": 25800000,
+                "event": "Free trade negotiations with the US begin",
+                "fun_fact": "Wayne Gretzky was dominating the NHL with the Edmonton Oilers"
+            },
+            "1990": {
+                "leader": "Brian Mulroney (PM)",
+                "population": 27700000,
+                "event": "Oka Crisis — 78-day standoff over Indigenous land rights",
+                "fun_fact": "The Meech Lake Accord failed, reigniting Quebec separatism"
+            },
+            "1995": {
+                "leader": "Jean Chrétien (PM)",
+                "population": 29300000,
+                "event": "Second Quebec referendum — 'Non' wins by just 1.2%",
+                "fun_fact": "Canada was becoming a tech hub with companies like Nortel and BlackBerry"
+            },
+            "2000": {
+                "leader": "Jean Chrétien (PM)",
+                "population": 30700000,
+                "event": "Nunavut territory is 1 year old — Canada's newest territory",
+                "fun_fact": "Canada had the fastest-growing G7 economy"
+            },
+            "2005": {
+                "leader": "Paul Martin (PM)",
+                "population": 32300000,
+                "event": "Same-sex marriage legalized nationally — fourth country in the world",
+                "fun_fact": "BlackBerry was the hottest tech company in North America"
+            },
+            "2010": {
+                "leader": "Stephen Harper (PM)",
+                "population": 34000000,
+                "event": "Vancouver Winter Olympics — 'Own the Podium' campaign succeeds",
+                "fun_fact": "Sidney Crosby's golden goal in OT became Canada's greatest hockey moment"
+            },
+            "2015": {
+                "leader": "Justin Trudeau (PM)",
+                "population": 35800000,
+                "event": "Justin Trudeau elected — promises 'sunny ways' and reconciliation",
+                "fun_fact": "Canada welcomed 25,000 Syrian refugees over the winter"
+            },
+            "2020": {
+                "leader": "Justin Trudeau (PM)",
+                "population": 37600000,
+                "event": "COVID-19 shuts down Canada — CERB payments support millions",
+                "fun_fact": "The US-Canada border was closed to non-essential travel for the first time in history"
+            },
+            "2025": {
+                "leader": "Mark Carney (PM)",
+                "population": 41000000,
+                "event": "Canada pushes AI regulation and clean energy investment",
+                "fun_fact": "Canada's population grew rapidly due to record immigration levels"
+            }
+        }
+    },
+    "Australia": {
+        "flag": "🇦🇺",
+        "currency": "$ (AUD)",
+        "years": {
+            "1950": {
+                "leader": "Robert Menzies (PM)",
+                "population": 8300000,
+                "event": "Post-war migration boom — 'Populate or Perish' policy",
+                "fun_fact": "The Snowy Mountains Hydroelectric Scheme was underway"
+            },
+            "1955": {
+                "leader": "Robert Menzies (PM)",
+                "population": 9300000,
+                "event": "Television arrives in Australia ahead of the 1956 Melbourne Olympics",
+                "fun_fact": "Rock 'n' roll was sweeping Australian youth culture"
+            },
+            "1960": {
+                "leader": "Robert Menzies (PM)",
+                "population": 10300000,
+                "event": "Australia sends military advisors to Vietnam",
+                "fun_fact": "The Sydney Opera House was under construction"
+            },
+            "1965": {
+                "leader": "Robert Menzies (PM)",
+                "population": 11400000,
+                "event": "Australian troops deployed to Vietnam — controversy grows",
+                "fun_fact": "Decimal currency (dollars and cents) was about to replace pounds and shillings"
+            },
+            "1970": {
+                "leader": "John Gorton (PM)",
+                "population": 12500000,
+                "event": "Anti-Vietnam War moratorium marches draw hundreds of thousands",
+                "fun_fact": "Sydney Opera House was nearing completion"
+            },
+            "1975": {
+                "leader": "Gough Whitlam (PM)",
+                "population": 13900000,
+                "event": "The Dismissal — Governor-General fires PM Whitlam in constitutional crisis",
+                "fun_fact": "Colour television was introduced to Australia"
+            },
+            "1980": {
+                "leader": "Malcolm Fraser (PM)",
+                "population": 14700000,
+                "event": "Australia boycotts the Moscow Olympics",
+                "fun_fact": "AC/DC released 'Back in Black', one of the best-selling albums ever"
+            },
+            "1985": {
+                "leader": "Bob Hawke (PM)",
+                "population": 15800000,
+                "event": "Australia wins the America's Cup — massive national celebration",
+                "fun_fact": "Crocodile Dundee was about to make Paul Hogan an international star"
+            },
+            "1990": {
+                "leader": "Bob Hawke (PM)",
+                "population": 17000000,
+                "event": "Economic recession hits — 'the recession we had to have'",
+                "fun_fact": "The World Wide Web was being invented, and Australia would be an early adopter"
+            },
+            "1995": {
+                "leader": "Paul Keating (PM)",
+                "population": 18100000,
+                "event": "Mabo decision reshapes Indigenous land rights in Australia",
+                "fun_fact": "Australia was preparing to host the 2000 Sydney Olympics"
+            },
+            "2000": {
+                "leader": "John Howard (PM)",
+                "population": 19200000,
+                "event": "Sydney Olympics — the 'best Olympics ever' according to IOC",
+                "fun_fact": "Cathy Freeman's gold medal run united the nation"
+            },
+            "2005": {
+                "leader": "John Howard (PM)",
+                "population": 20400000,
+                "event": "Cronulla riots highlight racial tensions",
+                "fun_fact": "Steve Irwin was Australia's most famous person internationally"
+            },
+            "2010": {
+                "leader": "Kevin Rudd / Julia Gillard (PM)",
+                "population": 22000000,
+                "event": "Julia Gillard becomes Australia's first female PM",
+                "fun_fact": "Mining boom was driving the economy — Australia avoided the Global Financial Crisis"
+            },
+            "2015": {
+                "leader": "Tony Abbott / Malcolm Turnbull (PM)",
+                "population": 23800000,
+                "event": "Marriage equality debate intensifies across the country",
+                "fun_fact": "Australian housing prices in Sydney and Melbourne were among the world's highest"
+            },
+            "2020": {
+                "leader": "Scott Morrison (PM)",
+                "population": 25700000,
+                "event": "Black Summer bushfires devastate eastern Australia — then COVID-19 hits",
+                "fun_fact": "Australia had some of the strictest COVID lockdowns in the world"
+            },
+            "2025": {
+                "leader": "Anthony Albanese (PM)",
+                "population": 26800000,
+                "event": "Australia invests heavily in renewable energy and AUKUS security pact",
+                "fun_fact": "Australia is one of the world's largest exporters of lithium for EV batteries"
+            }
+        }
+    },
+    "Japan": {
+        "flag": "🇯🇵",
+        "currency": "¥ (JPY)",
+        "years": {
+            "1950": {
+                "leader": "Yoshida Shigeru (PM)",
+                "population": 83200000,
+                "event": "Japan under post-war reconstruction — Korean War boosts Japanese industry",
+                "fun_fact": "Japan was still under significant US occupation influence"
+            },
+            "1955": {
+                "leader": "Hatoyama Ichirō (PM)",
+                "population": 89800000,
+                "event": "Japan's 'Economic Miracle' begins — rapid industrialization",
+                "fun_fact": "Sony had just released its first transistor radio"
+            },
+            "1960": {
+                "leader": "Ikeda Hayato (PM)",
+                "population": 93400000,
+                "event": "Income Doubling Plan launched — Japan aims to double GDP in 10 years",
+                "fun_fact": "Japan was preparing to host the 1964 Tokyo Olympics"
+            },
+            "1965": {
+                "leader": "Satō Eisaku (PM)",
+                "population": 98900000,
+                "event": "Shinkansen (bullet train) is 1 year old — revolutionizing transport",
+                "fun_fact": "Japan's GDP had grown to become the world's second-largest economy"
+            },
+            "1970": {
+                "leader": "Satō Eisaku (PM)",
+                "population": 104300000,
+                "event": "Osaka Expo 70 — 64 million visitors experience Japan's future vision",
+                "fun_fact": "Japan had the world's fastest trains and was a tech manufacturing powerhouse"
+            },
+            "1975": {
+                "leader": "Miki Takeo (PM)",
+                "population": 111900000,
+                "event": "Japan rebounds from oil crisis — becomes world leader in fuel-efficient cars",
+                "fun_fact": "Space Invaders was being developed (released 1978), launching the arcade era"
+            },
+            "1980": {
+                "leader": "Ōhira Masayoshi (PM)",
+                "population": 116800000,
+                "event": "Japan becomes the world's largest car manufacturer",
+                "fun_fact": "The Walkman (released 1979) was transforming how the world listens to music"
+            },
+            "1985": {
+                "leader": "Nakasone Yasuhiro (PM)",
+                "population": 121000000,
+                "event": "Plaza Accord signed — yen strengthens, reshaping Japan's economy",
+                "fun_fact": "Super Mario Bros. was released, becoming the best-selling game of all time"
+            },
+            "1990": {
+                "leader": "Kaifu Toshiki (PM)",
+                "population": 123500000,
+                "event": "Japanese asset bubble bursts — beginning of the 'Lost Decade'",
+                "fun_fact": "The Nikkei stock index had peaked at 38,957 on December 29, 1989"
+            },
+            "1995": {
+                "leader": "Murayama Tomiichi (PM)",
+                "population": 125600000,
+                "event": "Great Hanshin earthquake kills 6,434 — Aum Shinrikyo sarin attack in Tokyo subway",
+                "fun_fact": "Sony PlayStation was revolutionizing gaming worldwide"
+            },
+            "2000": {
+                "leader": "Mori Yoshirō (PM)",
+                "population": 126900000,
+                "event": "Japan enters the new millennium — still in economic stagnation",
+                "fun_fact": "Japanese anime and manga were becoming global cultural phenomena"
+            },
+            "2005": {
+                "leader": "Koizumi Jun'ichirō (PM)",
+                "population": 127800000,
+                "event": "Japan's population peaks — demographic decline begins",
+                "fun_fact": "Nintendo DS and Wii were about to make Nintendo culturally relevant again"
+            },
+            "2010": {
+                "leader": "Kan Naoto (PM)",
+                "population": 128100000,
+                "event": "China surpasses Japan as world's 2nd largest economy",
+                "fun_fact": "Japan's Hayabusa spacecraft returned asteroid samples to Earth — a first"
+            },
+            "2015": {
+                "leader": "Abe Shinzō (PM)",
+                "population": 127100000,
+                "event": "'Abenomics' reforms attempt to revive the economy",
+                "fun_fact": "Japan was preparing for the 2020 Tokyo Olympics"
+            },
+            "2020": {
+                "leader": "Abe Shinzō (PM)",
+                "population": 126500000,
+                "event": "Tokyo Olympics postponed due to COVID-19",
+                "fun_fact": "Japan's population had been declining for over a decade"
+            },
+            "2025": {
+                "leader": "Ishiba Shigeru (PM)",
+                "population": 123700000,
+                "event": "Japan embraces AI and robotics to address population decline",
+                "fun_fact": "Japan leads the world in humanoid robotics and elderly care technology"
+            }
+        }
+    },
+    "Germany": {
+        "flag": "🇩🇪",
+        "currency": "€ (EUR)",
+        "years": {
+            "1950": {
+                "leader": "Konrad Adenauer (Chancellor)",
+                "population": 68400000,
+                "event": "West Germany begins its 'Wirtschaftswunder' (economic miracle)",
+                "fun_fact": "Germany was still divided into East and West"
+            },
+            "1955": {
+                "leader": "Konrad Adenauer (Chancellor)",
+                "population": 71300000,
+                "event": "West Germany joins NATO — regains sovereignty",
+                "fun_fact": "Volkswagen Beetle was becoming the world's most popular car"
+            },
+            "1960": {
+                "leader": "Konrad Adenauer (Chancellor)",
+                "population": 73100000,
+                "event": "Berlin Wall is about to be built (1961) — Cold War tensions at peak",
+                "fun_fact": "West Germany had one of the fastest economic growths in the world"
+            },
+            "1965": {
+                "leader": "Ludwig Erhard (Chancellor)",
+                "population": 75600000,
+                "event": "Auschwitz trials conclude — Germany confronts its past",
+                "fun_fact": "Guest worker (Gastarbeiter) program was bringing millions of workers"
+            },
+            "1970": {
+                "leader": "Willy Brandt (Chancellor)",
+                "population": 78200000,
+                "event": "Brandt's Ostpolitik — historic kneel at the Warsaw Ghetto memorial",
+                "fun_fact": "West Germany won the 1974 World Cup, hosted on home soil"
+            },
+            "1975": {
+                "leader": "Helmut Schmidt (Chancellor)",
+                "population": 78700000,
+                "event": "Germany deals with Red Army Faction terrorism",
+                "fun_fact": "BMW, Mercedes-Benz, and Volkswagen were becoming global automotive leaders"
+            },
+            "1980": {
+                "leader": "Helmut Schmidt (Chancellor)",
+                "population": 78300000,
+                "event": "Peace movement grows — protests against nuclear weapons",
+                "fun_fact": "Germany was the economic powerhouse of Europe"
+            },
+            "1985": {
+                "leader": "Helmut Kohl (Chancellor)",
+                "population": 77600000,
+                "event": "Cold War tensions high — but change is coming",
+                "fun_fact": "Boris Becker became the youngest Wimbledon champion at age 17"
+            },
+            "1990": {
+                "leader": "Helmut Kohl (Chancellor)",
+                "population": 79400000,
+                "event": "German reunification — the Berlin Wall had fallen on November 9, 1989",
+                "fun_fact": "Germany would go on to host and win the World Cup in 2006 and 2014"
+            },
+            "1995": {
+                "leader": "Helmut Kohl (Chancellor)",
+                "population": 81700000,
+                "event": "Reunified Germany navigates economic challenges of integration",
+                "fun_fact": "SAP was becoming one of the world's largest software companies"
+            },
+            "2000": {
+                "leader": "Gerhard Schröder (Chancellor)",
+                "population": 82200000,
+                "event": "Germany adopts the Euro — replacing the Deutsche Mark",
+                "fun_fact": "Germany was one of the founding members of the Eurozone"
+            },
+            "2005": {
+                "leader": "Angela Merkel (Chancellor)",
+                "population": 82400000,
+                "event": "Angela Merkel becomes Germany's first female Chancellor",
+                "fun_fact": "Germany was preparing to host the 2006 FIFA World Cup"
+            },
+            "2010": {
+                "leader": "Angela Merkel (Chancellor)",
+                "population": 81800000,
+                "event": "Germany leads European response to the sovereign debt crisis",
+                "fun_fact": "Germany's renewable energy transition (Energiewende) was accelerating"
+            },
+            "2015": {
+                "leader": "Angela Merkel (Chancellor)",
+                "population": 82200000,
+                "event": "Merkel opens borders to refugees — 'Wir schaffen das' (We can do this)",
+                "fun_fact": "Over 1 million refugees arrived in Germany that year"
+            },
+            "2020": {
+                "leader": "Angela Merkel (Chancellor)",
+                "population": 83200000,
+                "event": "COVID-19 response — Germany's handling praised early in pandemic",
+                "fun_fact": "BioNTech co-developed the first authorized mRNA COVID vaccine"
+            },
+            "2025": {
+                "leader": "Friedrich Merz (Chancellor)",
+                "population": 84400000,
+                "event": "Germany accelerates green energy and digital transformation",
+                "fun_fact": "Germany remains Europe's largest economy and industrial powerhouse"
+            }
+        }
+    },
+    "Brazil": {
+        "flag": "🇧🇷",
+        "currency": "R$ (BRL)",
+        "years": {
+            "1950": {
+                "leader": "Eurico Gaspar Dutra",
+                "population": 53900000,
+                "event": "Brazil hosts and loses the 1950 FIFA World Cup final to Uruguay (Maracanazo)",
+                "fun_fact": "The Maracanã stadium held nearly 200,000 people for the final"
+            },
+            "1955": {
+                "leader": "Café Filho",
+                "population": 62900000,
+                "event": "Juscelino Kubitschek elected — plans to build Brasília",
+                "fun_fact": "Bossa nova music was emerging in Rio de Janeiro"
+            },
+            "1960": {
+                "leader": "Juscelino Kubitschek",
+                "population": 72700000,
+                "event": "Brasília inaugurated as the new capital — a modernist marvel",
+                "fun_fact": "Pelé was already a World Cup champion at age 17 (1958)"
+            },
+            "1965": {
+                "leader": "Castelo Branco (Military)",
+                "population": 83400000,
+                "event": "Military dictatorship consolidates — political repression grows",
+                "fun_fact": "Brazilian music was going global with bossa nova and Tropicália"
+            },
+            "1970": {
+                "leader": "Emílio Médici (Military)",
+                "population": 95700000,
+                "event": "Brazil wins the 1970 World Cup — considered the greatest team ever",
+                "fun_fact": "Pelé scored his 1,000th goal in 1969"
+            },
+            "1975": {
+                "leader": "Ernesto Geisel (Military)",
+                "population": 108100000,
+                "event": "Brazilian Miracle economy — rapid growth but inequality persists",
+                "fun_fact": "Brazil was one of the world's largest coffee exporters"
+            },
+            "1980": {
+                "leader": "João Figueiredo (Military)",
+                "population": 121600000,
+                "event": "Abertura — slow transition back to democracy begins",
+                "fun_fact": "Carnival in Rio was becoming one of the world's most famous festivals"
+            },
+            "1985": {
+                "leader": "José Sarney",
+                "population": 136500000,
+                "event": "Military rule ends — civilian government returns to Brazil",
+                "fun_fact": "Brazil's external debt crisis was reshaping the economy"
+            },
+            "1990": {
+                "leader": "Fernando Collor",
+                "population": 149600000,
+                "event": "Collor Plan freezes bank accounts to fight hyperinflation",
+                "fun_fact": "Brazilian hyperinflation reached over 1,000% per year"
+            },
+            "1995": {
+                "leader": "Fernando Henrique Cardoso",
+                "population": 162000000,
+                "event": "Plano Real stabilizes the economy — inflation finally tamed",
+                "fun_fact": "Brazil won the 1994 World Cup in the USA"
+            },
+            "2000": {
+                "leader": "Fernando Henrique Cardoso",
+                "population": 174000000,
+                "event": "Brazil celebrates 500 years since Portuguese arrival",
+                "fun_fact": "Brazilian telenovelas were watched across Latin America and beyond"
+            },
+            "2005": {
+                "leader": "Luiz Inácio Lula da Silva",
+                "population": 186000000,
+                "event": "Bolsa Família program lifts millions out of poverty",
+                "fun_fact": "Brazil was selected to host the 2014 FIFA World Cup"
+            },
+            "2010": {
+                "leader": "Luiz Inácio Lula da Silva",
+                "population": 198000000,
+                "event": "Brazil's economy booms — rises to 7th largest in the world",
+                "fun_fact": "Brazil was also awarded the 2016 Summer Olympics in Rio"
+            },
+            "2015": {
+                "leader": "Dilma Rousseff",
+                "population": 206000000,
+                "event": "Economic crisis and political scandal — impeachment proceedings begin",
+                "fun_fact": "Zika virus outbreak becomes a major health concern"
+            },
+            "2020": {
+                "leader": "Jair Bolsonaro",
+                "population": 213000000,
+                "event": "COVID-19 hits Brazil hard — Amazon deforestation concerns grow",
+                "fun_fact": "Brazil had the 2nd highest COVID case count globally"
+            },
+            "2025": {
+                "leader": "Luiz Inácio Lula da Silva",
+                "population": 217000000,
+                "event": "Lula returns — focuses on Amazon protection and social programs",
+                "fun_fact": "Brazil remains the world's largest coffee producer and a biodiversity superpower"
+            }
+        }
+    },
+    "France": {
+        "flag": "🇫🇷",
+        "currency": "€ (EUR)",
+        "years": {
+            "1950": {
+                "leader": "Vincent Auriol (President)",
+                "population": 41800000,
+                "event": "France rebuilds under the Fourth Republic — Schuman Declaration founds the EU",
+                "fun_fact": "French cinema was entering its golden age"
+            },
+            "1955": {
+                "leader": "René Coty (President)",
+                "population": 43400000,
+                "event": "Algerian War intensifies — decolonization crisis grows",
+                "fun_fact": "Citroën DS was unveiled, stunning the automotive world"
+            },
+            "1960": {
+                "leader": "Charles de Gaulle (President)",
+                "population": 45700000,
+                "event": "France tests its first nuclear weapon — becomes a nuclear power",
+                "fun_fact": "French New Wave cinema was revolutionizing filmmaking worldwide"
+            },
+            "1965": {
+                "leader": "Charles de Gaulle (President)",
+                "population": 48800000,
+                "event": "De Gaulle re-elected — France pursues independent foreign policy",
+                "fun_fact": "The Concorde supersonic jet was being developed with Britain"
+            },
+            "1970": {
+                "leader": "Georges Pompidou (President)",
+                "population": 50800000,
+                "event": "De Gaulle dies — end of an era for France",
+                "fun_fact": "The May 1968 protests had permanently changed French society"
+            },
+            "1975": {
+                "leader": "Valéry Giscard d'Estaing (President)",
+                "population": 52700000,
+                "event": "France modernizes — voting age lowered to 18",
+                "fun_fact": "The TGV high-speed rail project was being developed"
+            },
+            "1980": {
+                "leader": "Valéry Giscard d'Estaing (President)",
+                "population": 53900000,
+                "event": "François Mitterrand about to become president (1981) — leftist turn",
+                "fun_fact": "France was the world's top tourist destination"
+            },
+            "1985": {
+                "leader": "François Mitterrand (President)",
+                "population": 55300000,
+                "event": "Rainbow Warrior bombing — French agents sink Greenpeace ship",
+                "fun_fact": "The Louvre Pyramid was being designed by I.M. Pei"
+            },
+            "1990": {
+                "leader": "François Mitterrand (President)",
+                "population": 56700000,
+                "event": "German reunification reshapes European politics — France adapts",
+                "fun_fact": "France was preparing for the Maastricht Treaty and European Union formation"
+            },
+            "1995": {
+                "leader": "Jacques Chirac (President)",
+                "population": 58000000,
+                "event": "Chirac elected president — nuclear tests in the Pacific spark protests",
+                "fun_fact": "France won the Rugby World Cup semifinal (...and was preparing for 1998 FIFA World Cup)"
+            },
+            "2000": {
+                "leader": "Jacques Chirac (President)",
+                "population": 59000000,
+                "event": "France wins Euro 2000 — golden era of French football",
+                "fun_fact": "The 35-hour work week was implemented"
+            },
+            "2005": {
+                "leader": "Jacques Chirac (President)",
+                "population": 61200000,
+                "event": "French voters reject EU Constitution in referendum",
+                "fun_fact": "Paris bid for the 2012 Olympics but lost to London"
+            },
+            "2010": {
+                "leader": "Nicolas Sarkozy (President)",
+                "population": 62800000,
+                "event": "Pension reform protests — massive strikes across France",
+                "fun_fact": "France remained the world's most visited country"
+            },
+            "2015": {
+                "leader": "François Hollande (President)",
+                "population": 64500000,
+                "event": "Charlie Hebdo and November 13 Paris attacks — 'Je suis Charlie'",
+                "fun_fact": "Paris hosted COP21 — the Paris Climate Agreement was signed"
+            },
+            "2020": {
+                "leader": "Emmanuel Macron (President)",
+                "population": 67400000,
+                "event": "COVID-19 lockdowns — France implements strict containment measures",
+                "fun_fact": "Notre-Dame was still being rebuilt after the 2019 fire"
+            },
+            "2025": {
+                "leader": "Emmanuel Macron (President)",
+                "population": 68200000,
+                "event": "France pushes European strategic autonomy and AI investment",
+                "fun_fact": "The restored Notre-Dame Cathedral reopened in December 2024"
+            }
+        }
+    },
+    "South Korea": {
+        "flag": "🇰🇷",
+        "currency": "₩ (KRW)",
+        "years": {
+            "1950": {
+                "leader": "Syngman Rhee",
+                "population": 20200000,
+                "event": "Korean War begins — North Korea invades the South",
+                "fun_fact": "Seoul was captured and recaptured multiple times during the war"
+            },
+            "1955": {
+                "leader": "Syngman Rhee",
+                "population": 21500000,
+                "event": "Post-war reconstruction — South Korea is one of the poorest countries",
+                "fun_fact": "South Korea's GDP per capita was lower than many African nations"
+            },
+            "1960": {
+                "leader": "Yun Posun",
+                "population": 25000000,
+                "event": "April Revolution topples Syngman Rhee — student protests succeed",
+                "fun_fact": "South Korea was still largely agricultural with limited industry"
+            },
+            "1965": {
+                "leader": "Park Chung-hee",
+                "population": 28700000,
+                "event": "Normalization of relations with Japan — controversial but economically vital",
+                "fun_fact": "The 'Miracle on the Han River' economic transformation was beginning"
+            },
+            "1970": {
+                "leader": "Park Chung-hee",
+                "population": 32200000,
+                "event": "Rapid industrialization — Hyundai, Samsung, LG emerging as conglomerates",
+                "fun_fact": "South Korea's GDP was growing at over 10% per year"
+            },
+            "1975": {
+                "leader": "Park Chung-hee",
+                "population": 35300000,
+                "event": "Heavy and Chemical Industries drive — Korea becomes an industrial power",
+                "fun_fact": "Korean pop culture and entertainment industry was still in its infancy"
+            },
+            "1980": {
+                "leader": "Chun Doo-hwan",
+                "population": 38100000,
+                "event": "Gwangju Uprising — pro-democracy movement violently suppressed",
+                "fun_fact": "Samsung began its semiconductor business, which would become world-leading"
+            },
+            "1985": {
+                "leader": "Chun Doo-hwan",
+                "population": 40800000,
+                "event": "Democratization movement grows — 1987 June Struggle approaching",
+                "fun_fact": "Hyundai Excel became the first Korean car exported to the United States"
+            },
+            "1990": {
+                "leader": "Roh Tae-woo",
+                "population": 42900000,
+                "event": "South Korea establishes diplomatic relations with the Soviet Union",
+                "fun_fact": "South Korea's economy was among the 'Four Asian Tigers'"
+            },
+            "1995": {
+                "leader": "Kim Young-sam",
+                "population": 45100000,
+                "event": "South Korea joins OECD — recognized as a developed economy",
+                "fun_fact": "Samsung and LG were becoming major global electronics brands"
+            },
+            "2000": {
+                "leader": "Kim Dae-jung",
+                "population": 47000000,
+                "event": "Historic inter-Korean summit — Kim Dae-jung wins Nobel Peace Prize",
+                "fun_fact": "South Korea co-hosted the 2002 FIFA World Cup (reaching the semifinals!)"
+            },
+            "2005": {
+                "leader": "Roh Moo-hyun",
+                "population": 48100000,
+                "event": "Hallyu (Korean Wave) begins spreading globally — K-dramas and K-pop",
+                "fun_fact": "South Korea had the world's fastest internet speeds"
+            },
+            "2010": {
+                "leader": "Lee Myung-bak",
+                "population": 49400000,
+                "event": "G20 Summit hosted in Seoul — Korea on the world stage",
+                "fun_fact": "K-pop was going viral globally, with PSY's Gangnam Style coming in 2012"
+            },
+            "2015": {
+                "leader": "Park Geun-hye",
+                "population": 51000000,
+                "event": "MERS outbreak tests Korea's healthcare system",
+                "fun_fact": "BTS debuted in 2013 and was about to become the biggest boy band in the world"
+            },
+            "2020": {
+                "leader": "Moon Jae-in",
+                "population": 51800000,
+                "event": "Parasite wins Academy Award for Best Picture — first non-English film",
+                "fun_fact": "South Korea's COVID response (testing/tracing) was praised as a global model"
+            },
+            "2025": {
+                "leader": "Han Duck-soo (Acting)",
+                "population": 51700000,
+                "event": "South Korea leads in semiconductor manufacturing and AI development",
+                "fun_fact": "K-pop, K-dramas, and Korean cinema dominate global entertainment"
+            }
+        }
+    }
+}

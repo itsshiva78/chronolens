@@ -1,0 +1,305 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  decade?: string;
+}
+
+const { title, description = "Travel through time. See the world as it was.", decade = "" } = Astro.props;
+
+import '../styles/global.css';
+import InfoModal from '../components/InfoModal.astro';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | ChronoLens</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body data-decade={decade}>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="main-nav" id="mainNav">
+      <div class="nav-inner">
+        <a href="/" class="nav-logo">
+          <span class="gradient-text">CHRONO</span><span>LENS</span>
+        </a>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/discover" class="nav-link">Discover</a>
+          <a href="/decades" class="nav-link">Decades</a>
+          <a href="/compare" class="nav-link">Compare</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Particles Background -->
+    <div class="particles-bg" id="particlesBg"></div>
+
+    <!-- Main Content -->
+    <main>
+      <slot />
+    </main>
+
+    <InfoModal />
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="gradient-text">CHRONO</span><span>LENS</span>
+          <p class="text-muted">Travel through time. See the world as it was.</p>
+        </div>
+        <div class="footer-links">
+          <a href="/">Home</a>
+          <a href="/discover">Discover</a>
+          <a href="/decades">Decades</a>
+          <a href="/compare">Compare</a>
+        </div>
+        <p class="footer-copy text-muted">© 2025 ChronoLens. Data curated with care.</p>
+      </div>
+    </footer>
+
+    <style>
+      /* Nav */
+      .main-nav {
+        position: fixed;
+        top: 3px;
+        left: 0;
+        width: 100%;
+        z-index: 999;
+        padding: 0.8rem 1.5rem;
+        background: rgba(5, 8, 22, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .main-nav.scrolled {
+        background: rgba(5, 8, 22, 0.9);
+        padding: 0.5rem 1.5rem;
+      }
+      .nav-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .nav-logo {
+        font-family: var(--font-heading);
+        font-size: 1.3rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-decoration: none;
+        color: var(--text-primary);
+      }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+      .nav-link {
+        font-family: var(--font-body);
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.3s;
+        position: relative;
+      }
+      .nav-link:hover { color: var(--text-primary); }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--accent-gradient);
+        transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .nav-link:hover::after { width: 100%; }
+
+      /* Footer */
+      .site-footer {
+        border-top: 1px solid rgba(255,255,255,0.05);
+        padding: 3rem 1.5rem;
+        margin-top: 4rem;
+      }
+      .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        text-align: center;
+      }
+      .footer-brand {
+        font-family: var(--font-heading);
+        font-weight: 800;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        color: var(--text-primary);
+      }
+      .footer-brand p {
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        margin-top: 0.5rem;
+      }
+      .footer-links {
+        display: flex;
+        gap: 2rem;
+      }
+      .footer-links a {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        transition: color 0.3s;
+      }
+      .footer-links a:hover { color: var(--text-primary); }
+      .footer-copy { font-size: 0.8rem; }
+
+      @media (max-width: 768px) {
+        .nav-links { gap: 1rem; }
+        .nav-link { font-size: 0.8rem; }
+      }
+    </style>
+
+    <!-- Core Scripts -->
+    <script>
+      import Lenis from 'lenis';
+
+      // Smooth Scroll
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+      
+      // Make it globally available so InfoModal can stop/start it
+      window.lenis = lenis;
+
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // Progress Bar
+      const progressFill = document.getElementById('progressBarFill');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        if (progressFill) progressFill.style.width = scrollPercent + '%';
+      });
+
+      // Nav scroll effect
+      const nav = document.getElementById('mainNav');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          nav?.classList.add('scrolled');
+        } else {
+          nav?.classList.remove('scrolled');
+        }
+      });
+
+      // Particles
+      const particlesBg = document.getElementById('particlesBg');
+      if (particlesBg) {
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
+          particle.style.animationDelay = (Math.random() * 20) + 's';
+          particle.style.width = (Math.random() * 3 + 1) + 'px';
+          particle.style.height = particle.style.width;
+          particle.style.opacity = String(Math.random() * 0.5 + 0.1);
+          particlesBg.appendChild(particle);
+        }
+      }
+
+      // Scroll Reveal (Intersection Observer)
+      const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+      revealElements.forEach((el) => revealObserver.observe(el));
+
+      // Counter Animation
+      function animateCounter(element, target, duration = 2000) {
+        let start = 0;
+        const startTime = performance.now();
+        
+        function update(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = Math.floor(eased * target);
+          
+          if (target >= 1000000000) {
+            element.textContent = (current / 1000000000).toFixed(1) + 'B';
+          } else if (target >= 1000000) {
+            element.textContent = (current / 1000000).toFixed(1) + 'M';
+          } else if (target >= 1000) {
+            element.textContent = (current / 1000).toFixed(1) + 'K';
+          } else {
+            element.textContent = current.toString();
+          }
+          
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          }
+        }
+        requestAnimationFrame(update);
+      }
+
+      // Counter Observer
+      const counterElements = document.querySelectorAll('[data-counter]');
+      const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !entry.target.dataset.animated) {
+            entry.target.dataset.animated = 'true';
+            const target = parseInt(entry.target.dataset.counter);
+            animateCounter(entry.target, target);
+          }
+        });
+      }, { threshold: 0.5 });
+      counterElements.forEach((el) => counterObserver.observe(el));
+
+      // Staggered reveal
+      const staggerGroups = document.querySelectorAll('[data-stagger]');
+      const staggerObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const children = entry.target.children;
+            Array.from(children).forEach((child, i) => {
+              setTimeout(() => {
+                (child as HTMLElement).classList.add('active');
+              }, i * 150);
+            });
+          }
+        });
+      }, { threshold: 0.2 });
+      staggerGroups.forEach((el) => staggerObserver.observe(el));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,919 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import yearsData from '../../data/years.json';
+
+const { year } = Astro.params;
+const data = yearsData[year as keyof typeof yearsData];
+
+if (!data) {
+  return Astro.redirect('/');
+}
+
+const allYears = Object.keys(yearsData).map(Number).sort((a, b) => a - b);
+const currentIndex = allYears.indexOf(Number(year));
+const prevYear = currentIndex > 0 ? allYears[currentIndex - 1] : null;
+const nextYear = currentIndex < allYears.length - 1 ? allYears[currentIndex + 1] : null;
+
+function formatPop(val: number) {
+  if (val >= 1000000000) return (val / 1000000000).toFixed(1) + 'B';
+  if (val >= 1000000) return (val / 1000000).toFixed(0) + 'M';
+  return val.toLocaleString();
+}
+
+function getDecade(y: number) {
+  return Math.floor(y / 10) * 10 + 's';
+}
+
+function spotifyLink(song: string, artist: string) {
+  return `https://open.spotify.com/search/${encodeURIComponent(song + ' ' + artist)}`;
+}
+
+function youtubeLink(song: string, artist: string) {
+  return `https://www.youtube.com/results?search_query=${encodeURIComponent(song + ' ' + artist + ' official')}`;
+}
+
+function imdbLink(movie: string) {
+  return `https://www.imdb.com/find/?q=${encodeURIComponent(movie)}&s=tt`;
+}
+
+function justWatchLink(movie: string) {
+  return `https://www.justwatch.com/us/search?q=${encodeURIComponent(movie)}`;
+}
+
+const decade = getDecade(Number(year));
+const todayPrices = yearsData["2025"].prices;
+
+export function getStaticPaths() {
+  return Object.keys(yearsData).map((y) => ({ params: { year: y } }));
+}
+---
+
+<Layout title={`${year} — The World That Year`} decade={decade}>
+  <style>
+    /* Year Nav */
+    .year-nav {
+      position: fixed;
+      top: 55px;
+      left: 0;
+      width: 100%;
+      z-index: 998;
+      background: rgba(5,8,22,0.85);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 0.6rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+    }
+    .year-nav a {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .year-nav a:hover { color: var(--text-primary); }
+    .year-nav .current-year {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    /* Year Hero */
+    .year-hero {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+    }
+    .year-hero-number {
+      font-family: var(--font-heading);
+      font-size: clamp(6rem, 20vw, 16rem);
+      font-weight: 900;
+      line-height: 1;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0;
+      transform: scale(1.5);
+      animation: year-zoom-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes year-zoom-in {
+      to { opacity: 1; transform: scale(1); }
+    }
+    .year-hero-decade {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 1rem;
+    }
+
+    /* Act Headers */
+    .act-section {
+      padding: 5rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .act-header {
+      margin-bottom: 3rem;
+    }
+    .act-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin-bottom: 0.3rem;
+    }
+    .act-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+      font-style: italic;
+      color: var(--text-secondary);
+    }
+
+    /* Population */
+    .pop-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .pop-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+    }
+    .pop-card-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .pop-card-label.then { color: var(--accent-primary); }
+    .pop-card-label.now { color: var(--text-muted); }
+    .pop-card-number {
+      font-family: var(--font-mono);
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .pop-card-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+    .pop-note {
+      text-align: center;
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 1.5rem;
+      padding: 0 2rem;
+    }
+
+    /* Leaders */
+    .leaders-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .leader-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .leader-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-glass-hover);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .leader-role {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin-bottom: 0.8rem;
+    }
+    .leader-flag {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .leader-name {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Events */
+    .events-timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin-top: 2rem;
+    }
+    .events-timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent-primary), transparent);
+    }
+    .event-item {
+      position: relative;
+      padding: 1rem 0 1rem 1.5rem;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    .event-item.active {
+      opacity: 1;
+      transform: translateX(0);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .event-item::before {
+      content: '';
+      position: absolute;
+      left: -1.5rem;
+      top: 1.35rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+    .event-text {
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    /* Culture Cards */
+    .culture-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .culture-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .culture-card:hover {
+      border-color: var(--border-glass-hover);
+      transform: translateY(-3px);
+    }
+    .culture-icon {
+      font-size: 2rem;
+      margin-bottom: 0.8rem;
+    }
+    .culture-category {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+    }
+    .culture-main {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+    }
+    .culture-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .culture-list {
+      margin-top: 1rem;
+      list-style: none;
+    }
+    .culture-list li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 0.3rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .media-links-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .media-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s;
+      border: 1px solid;
+    }
+    .media-link-spotify { color: #1DB954; border-color: rgba(29,185,84,0.3); background: rgba(29,185,84,0.06); }
+    .media-link-spotify:hover { background: rgba(29,185,84,0.15); border-color: #1DB954; }
+    .media-link-youtube { color: #FF0000; border-color: rgba(255,0,0,0.3); background: rgba(255,0,0,0.06); }
+    .media-link-youtube:hover { background: rgba(255,0,0,0.15); border-color: #FF0000; }
+    .media-link-watch { color: #E50914; border-color: rgba(229,9,20,0.3); background: rgba(229,9,20,0.06); }
+    .media-link-watch:hover { background: rgba(229,9,20,0.15); border-color: #E50914; }
+    .media-link-imdb { color: #F5C518; border-color: rgba(245,197,24,0.3); background: rgba(245,197,24,0.06); }
+    .media-link-imdb:hover { background: rgba(245,197,24,0.15); border-color: #F5C518; }
+
+    /* Tech Timeline */
+    .tech-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .tech-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .tech-item:hover {
+      border-color: var(--accent-primary);
+      background: rgba(255,255,255,0.05);
+    }
+    .tech-item-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .tech-item-text {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    /* Prices */
+    .prices-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .price-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .price-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .price-label {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .price-then {
+      font-family: var(--font-mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+    .price-now {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .price-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.05);
+      margin-top: 0.8rem;
+      overflow: hidden;
+    }
+    .price-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--accent-gradient);
+      width: 0%;
+      transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Sports */
+    .sports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .sport-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .sport-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .sport-league {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .sport-winner {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Environment */
+    .env-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .env-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+    }
+    .env-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .env-value {
+      font-family: var(--font-mono);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+    }
+    .env-unit {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .env-compare {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+    .env-gauge {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 4px;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+    .env-gauge-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+      transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .co2-gauge .env-gauge-fill {
+      background: linear-gradient(90deg, #10B981, #F59E0B, #EF4444);
+    }
+    .temp-gauge .env-gauge-fill {
+      background: linear-gradient(90deg, #3B82F6, #F59E0B, #EF4444);
+    }
+
+    /* Year Footer Nav */
+    .year-footer-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .year-footer-nav a {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      transition: all 0.3s;
+    }
+    .year-footer-nav a:hover {
+      border-color: var(--accent-primary);
+      color: var(--text-primary);
+    }
+
+    /* Additional Info */
+    .info-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: rgba(255,255,255,0.02);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--accent-primary);
+    }
+    .info-row .info-icon { font-size: 1.2rem; }
+    .info-row .info-label {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .info-row .info-value {
+      font-size: 1rem;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .pop-cards, .culture-grid, .leaders-grid, .env-cards { grid-template-columns: 1fr; }
+      .year-nav { gap: 1rem; font-size: 0.75rem; }
+    }
+  </style>
+
+  <!-- Year Sub-Nav -->
+  <div class="year-nav">
+    {prevYear && <a href={`/year/${prevYear}`}>◄ {prevYear}</a>}
+    <span class="current-year">{year}</span>
+    {nextYear && <a href={`/year/${nextYear}`}>{nextYear} ►</a>}
+  </div>
+
+  <!-- Year Hero -->
+  <section class="year-hero">
+    <div class="year-hero-number">{year}</div>
+    <div class="year-hero-decade">{data.decade} Era</div>
+  </section>
+
+  <!-- ACT I: World Stage -->
+  <section class="act-section">
+    <div class="act-header reveal">
+      <div class="act-label">Act I</div>
+      <div class="act-title">The World Stage</div>
+    </div>
+
+    <div class="pop-cards" data-stagger>
+      <div class="pop-card reveal">
+        <div class="pop-card-label then">{year}</div>
+        <div class="pop-card-number" data-counter={data.population.value}>{formatPop(data.population.value)}</div>
+        <div class="pop-card-sub">people on Earth when this year began</div>
+      </div>
+      <div class="pop-card reveal">
+        <div class="pop-card-label now">Today</div>
+        <div class="pop-card-number">{formatPop(data.population.today)}</div>
+        <div class="pop-card-sub">+{formatPop(data.population.today - data.population.value)} more people since</div>
+      </div>
+    </div>
+
+    <div class="leaders-grid" data-stagger>
+      <div class="leader-card reveal">
+        <div class="leader-flag">🇺🇸</div>
+        <div class="leader-role">US President</div>
+        <div class="leader-name info-clickable" onclick="openInfoModal(this.innerText, 'politician')">{data.leaders.us_president}</div>
+      </div>
+      <div class="leader-card reveal">
+        <div class="leader-flag">🇬🇧</div>
+        <div class="leader-role">UK Prime Minister</div>
+        <div class="leader-name info-clickable" onclick="openInfoModal(this.innerText, 'politician')">{data.leaders.uk_pm}</div>
+      </div>
+      <div class="leader-card reveal">
+        <div class="leader-flag">🇺🇳</div>
+        <div class="leader-role">UN Secretary-General</div>
+        <div class="leader-name info-clickable" onclick="openInfoModal(this.innerText, 'politician')">{data.leaders.un_sg}</div>
+      </div>
+    </div>
+
+    <div class="act-header reveal" style="margin-top: 3rem;">
+      <div class="act-label">Defining Moments</div>
+    </div>
+    <div class="events-timeline" data-stagger>
+      {data.events.map((event) => (
+        <div class="event-item reveal-left">
+          <div class="event-text info-clickable" onclick="openInfoModal(this.innerText, 'event')">{event}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ACT II: Culture -->
+  <section class="act-section">
+    <div class="act-header reveal">
+      <div class="act-label">Act II</div>
+      <div class="act-title">Culture & Entertainment</div>
+    </div>
+
+    <div class="culture-grid" data-stagger>
+      <div class="culture-card reveal">
+        <div class="culture-icon">🎵</div>
+        <div class="culture-category">#1 Song</div>
+        <div class="culture-main info-clickable" onclick="openInfoModal(this.innerText, 'song')">{data.music.number_one}</div>
+        <div class="culture-sub info-clickable" onclick="openInfoModal(this.innerText, 'musician')">{data.music.artist}</div>
+        <div class="media-links-row">
+          <a href={spotifyLink(data.music.number_one, data.music.artist)} target="_blank" rel="noopener" class="media-link media-link-spotify">🎧 Spotify</a>
+          <a href={youtubeLink(data.music.number_one, data.music.artist)} target="_blank" rel="noopener" class="media-link media-link-youtube">▶ YouTube</a>
+        </div>
+        {data.music.top_albums.length > 0 && (
+          <ul class="culture-list" style="margin-top:0.8rem;">
+            {data.music.top_albums.map((album: string) => <li>♪ <span class="info-clickable" onclick="openInfoModal(this.innerText, 'album')">{album}</span></li>)}
+          </ul>
+        )}
+      </div>
+
+      <div class="culture-card reveal">
+        <div class="culture-icon">🎬</div>
+        <div class="culture-category">#1 Movie</div>
+        <div class="culture-main info-clickable" onclick="openInfoModal(this.innerText, 'film')">{data.movies.number_one}</div>
+        <div class="culture-sub">Oscar Best Picture: {data.movies.oscar_best_picture}</div>
+        <div class="media-links-row">
+          <a href={justWatchLink(data.movies.number_one)} target="_blank" rel="noopener" class="media-link media-link-watch">📺 Where to Watch</a>
+          <a href={imdbLink(data.movies.number_one)} target="_blank" rel="noopener" class="media-link media-link-imdb">⭐ IMDb</a>
+        </div>
+        <ul class="culture-list" style="margin-top:0.8rem;">
+          {data.movies.box_office_top.map((m: string) => <li>🎥 <span class="info-clickable" onclick="openInfoModal(this.innerText, 'film')">{m}</span></li>)}
+        </ul>
+      </div>
+
+      <div class="culture-card reveal">
+        <div class="culture-icon">📺</div>
+        <div class="culture-category">Top TV Shows</div>
+        <ul class="culture-list">
+          {data.tv_shows.map(show => <li>📺 {show}</li>)}
+        </ul>
+      </div>
+
+      <div class="culture-card reveal">
+        <div class="culture-icon">📖</div>
+        <div class="culture-category">Notable Books</div>
+        <ul class="culture-list">
+          {data.books.map(book => <li>📚 {book}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT III: Technology -->
+  <section class="act-section">
+    <div class="act-header reveal">
+      <div class="act-label">Act III</div>
+      <div class="act-title">Technology & Science</div>
+    </div>
+
+    <div class="tech-items" data-stagger>
+      {data.technology.map((tech) => (
+        <div class="tech-item reveal-scale">
+          <div class="tech-item-icon">⚡</div>
+          <div class="tech-item-text">{tech}</div>
+        </div>
+      ))}
+    </div>
+
+    {data.space.length > 0 && (
+      <div class="info-row reveal" style="margin-top: 2rem;">
+        <span class="info-icon">🚀</span>
+        <div>
+          <div class="info-label">Space</div>
+          <div class="info-value">{data.space.join(' • ')}</div>
+        </div>
+      </div>
+    )}
+
+    <div class="info-row reveal">
+      <span class="info-icon">🏅</span>
+      <div>
+        <div class="info-label">Nobel Peace Prize</div>
+        <div class="info-value">{data.nobel.peace}</div>
+      </div>
+    </div>
+    <div class="info-row reveal">
+      <span class="info-icon">⚛️</span>
+      <div>
+        <div class="info-label">Nobel Physics</div>
+        <div class="info-value">{data.nobel.physics}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT IV: Cost of Living -->
+  <section class="act-section">
+    <div class="act-header reveal">
+      <div class="act-label">Act IV</div>
+      <div class="act-title">Cost of Living</div>
+    </div>
+
+    <div class="prices-grid" data-stagger id="pricesGrid">
+      <div class="price-card reveal" data-price-ratio={data.prices.gas_gallon / todayPrices.gas_gallon}>
+        <div class="price-icon">⛽</div>
+        <div class="price-label">Gas / Gallon</div>
+        <div class="price-then">${data.prices.gas_gallon.toFixed(2)}</div>
+        <div class="price-now">Today: ${todayPrices.gas_gallon.toFixed(2)}</div>
+        <div class="price-bar"><div class="price-bar-fill"></div></div>
+      </div>
+      <div class="price-card reveal" data-price-ratio={data.prices.milk_gallon / todayPrices.milk_gallon}>
+        <div class="price-icon">🥛</div>
+        <div class="price-label">Milk / Gallon</div>
+        <div class="price-then">${data.prices.milk_gallon.toFixed(2)}</div>
+        <div class="price-now">Today: ${todayPrices.milk_gallon.toFixed(2)}</div>
+        <div class="price-bar"><div class="price-bar-fill"></div></div>
+      </div>
+      <div class="price-card reveal" data-price-ratio={data.prices.movie_ticket / todayPrices.movie_ticket}>
+        <div class="price-icon">🎬</div>
+        <div class="price-label">Movie Ticket</div>
+        <div class="price-then">${data.prices.movie_ticket.toFixed(2)}</div>
+        <div class="price-now">Today: ${todayPrices.movie_ticket.toFixed(2)}</div>
+        <div class="price-bar"><div class="price-bar-fill"></div></div>
+      </div>
+      <div class="price-card reveal" data-price-ratio={data.prices.avg_home / todayPrices.avg_home}>
+        <div class="price-icon">🏠</div>
+        <div class="price-label">Average Home</div>
+        <div class="price-then">${data.prices.avg_home.toLocaleString()}</div>
+        <div class="price-now">Today: ${todayPrices.avg_home.toLocaleString()}</div>
+        <div class="price-bar"><div class="price-bar-fill"></div></div>
+      </div>
+      <div class="price-card reveal" data-price-ratio={data.prices.new_car / todayPrices.new_car}>
+        <div class="price-icon">🚗</div>
+        <div class="price-label">New Car</div>
+        <div class="price-then">${data.prices.new_car.toLocaleString()}</div>
+        <div class="price-now">Today: ${todayPrices.new_car.toLocaleString()}</div>
+        <div class="price-bar"><div class="price-bar-fill"></div></div>
+      </div>
+      <div class="price-card reveal" data-price-ratio={data.prices.stamp / todayPrices.stamp}>
+        <div class="price-icon">📮</div>
+        <div class="price-label">Postage Stamp</div>
+        <div class="price-then">${data.prices.stamp.toFixed(2)}</div>
+        <div class="price-now">Today: ${todayPrices.stamp.toFixed(2)}</div>
+        <div class="price-bar"><div class="price-bar-fill"></div></div>
+      </div>
+    </div>
+
+    <div class="info-row reveal" style="margin-top: 2rem;">
+      <span class="info-icon">💵</span>
+      <div>
+        <div class="info-label">Average Salary</div>
+        <div class="info-value">${data.salary.average.toLocaleString()} / year (min wage: ${data.salary.minimum_wage_hr}/hr)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT V: Sports -->
+  <section class="act-section">
+    <div class="act-header reveal">
+      <div class="act-label">Act V</div>
+      <div class="act-title">Sports Champions</div>
+    </div>
+
+    <div class="sports-grid" data-stagger>
+      {data.sports.world_series && (
+        <div class="sport-card reveal-scale">
+          <div class="sport-icon">⚾</div>
+          <div class="sport-league">World Series</div>
+          <div class="sport-winner">{data.sports.world_series}</div>
+        </div>
+      )}
+      {data.sports.nba_finals && (
+        <div class="sport-card reveal-scale">
+          <div class="sport-icon">🏀</div>
+          <div class="sport-league">NBA Finals</div>
+          <div class="sport-winner">{data.sports.nba_finals}</div>
+        </div>
+      )}
+      {(data.sports.super_bowl || data.sports.nfl_champion) && (
+        <div class="sport-card reveal-scale">
+          <div class="sport-icon">🏈</div>
+          <div class="sport-league">{data.sports.super_bowl ? 'Super Bowl' : 'NFL Champion'}</div>
+          <div class="sport-winner">{data.sports.super_bowl || data.sports.nfl_champion}</div>
+        </div>
+      )}
+      {data.sports.fifa_world_cup && (
+        <div class="sport-card reveal-scale">
+          <div class="sport-icon">⚽</div>
+          <div class="sport-league">FIFA World Cup</div>
+          <div class="sport-winner">{data.sports.fifa_world_cup}</div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- ACT VI: Environment -->
+  <section class="act-section">
+    <div class="act-header reveal">
+      <div class="act-label">Act VI</div>
+      <div class="act-title">Our Planet</div>
+    </div>
+
+    <div class="env-cards" data-stagger>
+      <div class="env-card reveal" id="co2Card">
+        <div class="env-label">CO₂ Levels</div>
+        <div class="env-value" style="color: var(--accent-primary);" data-counter={data.environment.co2_ppm}>0</div>
+        <div class="env-unit">parts per million</div>
+        <div class="env-compare">Today: 422 ppm</div>
+        <div class="env-gauge co2-gauge">
+          <div class="env-gauge-fill" data-fill={Math.round((data.environment.co2_ppm / 500) * 100)}></div>
+        </div>
+      </div>
+      <div class="env-card reveal" id="tempCard">
+        <div class="env-label">Temperature Anomaly</div>
+        <div class="env-value" style={data.environment.temp_anomaly > 0.5 ? 'color: #F59E0B;' : data.environment.temp_anomaly > 1 ? 'color: #EF4444;' : 'color: #3B82F6;'}>
+          {data.environment.temp_anomaly > 0 ? '+' : ''}{data.environment.temp_anomaly}°C
+        </div>
+        <div class="env-unit">vs. pre-industrial average</div>
+        <div class="env-compare">Today: +1.45°C</div>
+        <div class="env-gauge temp-gauge">
+          <div class="env-gauge-fill" data-fill={Math.round(((data.environment.temp_anomaly + 0.5) / 2.5) * 100)}></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-row reveal" style="margin-top: 2rem;">
+      <span class="info-icon">❤️</span>
+      <div>
+        <div class="info-label">Life Expectancy</div>
+        <div class="info-value">{data.life_expectancy} years</div>
+      </div>
+    </div>
+
+    {data.internet && (
+      <div class="info-row reveal">
+        <span class="info-icon">🌐</span>
+        <div>
+          <div class="info-label">Internet</div>
+          <div class="info-value">{data.internet}</div>
+        </div>
+      </div>
+    )}
+  </section>
+
+  <!-- Year Footer Nav -->
+  <div class="year-footer-nav reveal">
+    {prevYear && <a href={`/year/${prevYear}`}>◄ {prevYear}</a>}
+    <a href="/" style="background: var(--accent-gradient); color: var(--bg-deep); border: none;">All Years</a>
+    {nextYear && <a href={`/year/${nextYear}`}>{nextYear} ►</a>}
+  </div>
+
+  <script>
+    // Animate price bars and gauges on scroll
+    const priceCards = document.querySelectorAll('.price-card');
+    const priceObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const ratio = parseFloat((entry.target as HTMLElement).dataset.priceRatio || '0');
+          const fill = entry.target.querySelector('.price-bar-fill') as HTMLElement;
+          if (fill) {
+            setTimeout(() => {
+              fill.style.width = Math.min(ratio * 100, 100) + '%';
+            }, 300);
+          }
+        }
+      });
+    }, { threshold: 0.3 });
+    priceCards.forEach((el) => priceObserver.observe(el));
+
+    // Gauge fills
+    const gaugeFills = document.querySelectorAll('.env-gauge-fill');
+    const gaugeObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const fill = entry.target as HTMLElement;
+          const target = fill.dataset.fill || '0';
+          setTimeout(() => {
+            fill.style.width = target + '%';
+          }, 500);
+        }
+      });
+    }, { threshold: 0.5 });
+    gaugeFills.forEach((el) => gaugeObserver.observe(el));
+  </script>
+</Layout>

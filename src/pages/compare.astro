@@ -1,0 +1,631 @@
+---
+import Layout from '../layouts/Layout.astro';
+import yearsData from '../data/years.json';
+
+const availableYears = Object.keys(yearsData).sort();
+
+function formatPop(val: number) {
+  if (val >= 1000000000) return (val / 1000000000).toFixed(2) + 'B';
+  if (val >= 1000000) return (val / 1000000).toFixed(0) + 'M';
+  return val.toLocaleString();
+}
+
+function pctChange(a: number, b: number) {
+  return ((b - a) / a * 100).toFixed(1);
+}
+---
+
+<Layout title="Compare Two Eras">
+  <style is:global>
+    .compare-hero {
+      min-height: 40vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 2rem 3rem;
+    }
+    .compare-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 1rem;
+    }
+    .compare-selectors {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .compare-year-select {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 800;
+      padding: 0.8rem 1.5rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      text-align: center;
+      min-width: 140px;
+      transition: border-color 0.3s;
+    }
+    .compare-year-select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 25px var(--accent-glow);
+    }
+    .compare-year-select option {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+    .compare-vs-badge {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-full);
+    }
+
+    /* Results */
+    .compare-results {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 6rem;
+    }
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .compare-row.active {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .compare-cell {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .compare-cell-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .compare-cell-value {
+      font-family: var(--font-mono);
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .compare-cell-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .compare-delta {
+      text-align: center;
+    }
+    .delta-pill {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: var(--radius-full);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 700;
+      animation: delta-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    @keyframes delta-pop {
+      to { opacity: 1; transform: scale(1); }
+    }
+    .delta-pill.up {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .delta-pill.down {
+      background: rgba(239, 68, 68, 0.15);
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .compare-category-header {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin: 3rem 0 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .compare-list {
+      margin-top: 1rem;
+      list-style: none;
+      text-align: left;
+    }
+    .compare-list li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .compare-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* Media link buttons */
+    .media-links-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+      justify-content: center;
+    }
+    .media-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s;
+      border: 1px solid;
+    }
+    .media-link-spotify { color: #1DB954; border-color: rgba(29,185,84,0.3); background: rgba(29,185,84,0.06); }
+    .media-link-spotify:hover { background: rgba(29,185,84,0.15); border-color: #1DB954; }
+    
+    .media-link-youtube { color: #FF0000; border-color: rgba(255,0,0,0.3); background: rgba(255,0,0,0.06); }
+    .media-link-youtube:hover { background: rgba(255,0,0,0.15); border-color: #FF0000; }
+    
+    .media-link-watch { color: #E50914; border-color: rgba(229,9,20,0.3); background: rgba(229,9,20,0.06); }
+    .media-link-watch:hover { background: rgba(229,9,20,0.15); border-color: #E50914; }
+    
+    .media-link-imdb { color: #F5C518; border-color: rgba(245,197,24,0.3); background: rgba(245,197,24,0.06); }
+    .media-link-imdb:hover { background: rgba(245,197,24,0.15); border-color: #F5C518; }
+
+    /* Chart placeholder */
+    .chart-container {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+    .chart-title {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+    }
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 3rem;
+      height: 200px;
+      padding: 0 2rem;
+    }
+    .chart-bar-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .chart-bar {
+      width: 60px;
+      border-radius: 4px 4px 0 0;
+      transition: height 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+      height: 0;
+    }
+    .chart-bar.bar-1 {
+      background: linear-gradient(to top, var(--accent-primary), var(--accent-secondary));
+    }
+    .chart-bar.bar-2 {
+      background: linear-gradient(to top, #7C3AED, #06B6D4);
+    }
+    .chart-bar-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .chart-bar-value {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      .compare-row {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+      .compare-selectors { flex-direction: column; gap: 1rem; }
+      .chart-bars { gap: 1.5rem; }
+      .chart-bar { width: 40px; }
+    }
+  </style>
+
+  <section class="compare-hero">
+    <h1 class="reveal"><span class="gradient-text">Compare Two Eras</span></h1>
+    <p class="text-secondary reveal">See how much the world changed between any two years</p>
+
+    <div class="compare-selectors reveal">
+      <select class="compare-year-select" id="selectY1">
+        {availableYears.map(y => (
+          <option value={y} selected={y === '1960'}>{y}</option>
+        ))}
+      </select>
+
+      <span class="compare-vs-badge">VS</span>
+
+      <select class="compare-year-select" id="selectY2">
+        {availableYears.map(y => (
+          <option value={y} selected={y === '2020'}>{y}</option>
+        ))}
+      </select>
+    </div>
+  </section>
+
+  <div class="compare-results" id="compareResults">
+    <div class="no-data" id="loadingMsg">Select two years and data will appear here...</div>
+  </div>
+
+  <script define:vars={{ yearsData }}>
+    const selectY1 = document.getElementById('selectY1');
+    const selectY2 = document.getElementById('selectY2');
+    const resultsDiv = document.getElementById('compareResults');
+
+    // Read URL params
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('y1')) selectY1.value = params.get('y1');
+    if (params.get('y2')) selectY2.value = params.get('y2');
+
+    function formatPop(val) {
+      if (val >= 1000000000) return (val / 1000000000).toFixed(2) + 'B';
+      if (val >= 1000000) return (val / 1000000).toFixed(0) + 'M';
+      return val.toLocaleString();
+    }
+
+    function pct(a, b) {
+      return ((b - a) / a * 100).toFixed(1);
+    }
+
+    function spotifyLink(song, artist) {
+      return `https://open.spotify.com/search/${encodeURIComponent(song + ' ' + artist)}`;
+    }
+    
+    function youtubeLink(song, artist) {
+      return `https://www.youtube.com/results?search_query=${encodeURIComponent(song + ' ' + artist + ' official')}`;
+    }
+    
+    function imdbLink(movie) {
+      return `https://www.imdb.com/find/?q=${encodeURIComponent(movie)}&s=tt`;
+    }
+    
+    function justWatchLink(movie) {
+      return `https://www.justwatch.com/us/search?q=${encodeURIComponent(movie)}`;
+    }
+
+    function renderComparison() {
+      const y1 = selectY1.value;
+      const y2 = selectY2.value;
+      const d1 = yearsData[y1];
+      const d2 = yearsData[y2];
+
+      if (!d1 || !d2) {
+        resultsDiv.innerHTML = '<div class="no-data">Data not available for selected years</div>';
+        return;
+      }
+
+      // Update URL
+      const url = new URL(window.location);
+      url.searchParams.set('y1', y1);
+      url.searchParams.set('y2', y2);
+      window.history.replaceState({}, '', url);
+
+      const popPct = pct(d1.population.value, d2.population.value);
+      const gasPct = pct(d1.prices.gas_gallon, d2.prices.gas_gallon);
+      const homePct = pct(d1.prices.avg_home, d2.prices.avg_home);
+      const salaryPct = pct(d1.salary.average, d2.salary.average);
+      const co2Pct = pct(d1.environment.co2_ppm, d2.environment.co2_ppm);
+
+      resultsDiv.innerHTML = `
+        <div class="compare-category-header reveal">🌍 Population & Life</div>
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">${y1} Population</div>
+            <div class="compare-cell-value">${formatPop(d1.population.value)}</div>
+          </div>
+          <div class="compare-delta">
+            <span class="delta-pill ${parseFloat(popPct) >= 0 ? 'up' : 'down'}">${parseFloat(popPct) >= 0 ? '+' : ''}${popPct}%</span>
+          </div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">${y2} Population</div>
+            <div class="compare-cell-value">${formatPop(d2.population.value)}</div>
+          </div>
+        </div>
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">${y1} Life Expectancy</div>
+            <div class="compare-cell-value" style="font-size:1.5rem">${d1.population.life_expectancy} yrs</div>
+          </div>
+          <div class="compare-delta"><span class="compare-vs-badge" style="font-size:1rem">⏳</span></div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">${y2} Life Expectancy</div>
+            <div class="compare-cell-value" style="font-size:1.5rem">${d2.population.life_expectancy} yrs</div>
+          </div>
+        </div>
+
+        <div class="compare-category-header reveal">👔 Leaders</div>
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">US President</div>
+            <div class="compare-cell-value info-clickable" style="font-size:1.2rem" onclick="openInfoModal(this.innerText, 'politician')">${d1.leaders.us_president}</div>
+          </div>
+          <div class="compare-delta"><span class="compare-vs-badge" style="font-size:1rem">🇺🇸</span></div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">US President</div>
+            <div class="compare-cell-value info-clickable" style="font-size:1.2rem" onclick="openInfoModal(this.innerText, 'politician')">${d2.leaders.us_president}</div>
+          </div>
+        </div>
+        
+        <div class="compare-category-header reveal">🎭 Culture & Entertainment</div>
+        
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">#1 Song</div>
+            <div class="compare-cell-value info-clickable" style="font-size:1.1rem" onclick="openInfoModal(this.innerText, 'song')">${d1.music.number_one}</div>
+            <div class="compare-cell-sub info-clickable" onclick="openInfoModal(this.innerText, 'musician')">${d1.music.artist}</div>
+            <div class="media-links-row">
+              <a href="\${spotifyLink(d1.music.number_one, d1.music.artist)}" target="_blank" rel="noopener" class="media-link media-link-spotify">🎧 Spotify</a>
+              <a href="\${youtubeLink(d1.music.number_one, d1.music.artist)}" target="_blank" rel="noopener" class="media-link media-link-youtube">▶ YouTube</a>
+            </div>
+          </div>
+          <div class="compare-delta"><span class="compare-vs-badge" style="font-size:1rem">♪</span></div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">#1 Song</div>
+            <div class="compare-cell-value info-clickable" style="font-size:1.1rem" onclick="openInfoModal(this.innerText, 'song')">${d2.music.number_one}</div>
+            <div class="compare-cell-sub info-clickable" onclick="openInfoModal(this.innerText, 'musician')">${d2.music.artist}</div>
+            <div class="media-links-row">
+              <a href="\${spotifyLink(d2.music.number_one, d2.music.artist)}" target="_blank" rel="noopener" class="media-link media-link-spotify">🎧 Spotify</a>
+              <a href="\${youtubeLink(d2.music.number_one, d2.music.artist)}" target="_blank" rel="noopener" class="media-link media-link-youtube">▶ YouTube</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">#1 Movie</div>
+            <div class="compare-cell-value info-clickable" style="font-size:1.1rem" onclick="openInfoModal(this.innerText, 'film')">${d1.movies.number_one}</div>
+            <div class="compare-cell-sub">Oscar: ${d1.movies.oscar_best_picture}</div>
+            <div class="media-links-row">
+              <a href="\${justWatchLink(d1.movies.number_one)}" target="_blank" rel="noopener" class="media-link media-link-watch">📺 Watch</a>
+              <a href="\${imdbLink(d1.movies.number_one)}" target="_blank" rel="noopener" class="media-link media-link-imdb">⭐ IMDb</a>
+            </div>
+          </div>
+          <div class="compare-delta"><span class="compare-vs-badge" style="font-size:1rem">🎥</span></div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">#1 Movie</div>
+            <div class="compare-cell-value info-clickable" style="font-size:1.1rem" onclick="openInfoModal(this.innerText, 'film')">${d2.movies.number_one}</div>
+            <div class="compare-cell-sub">Oscar: ${d2.movies.oscar_best_picture}</div>
+            <div class="media-links-row">
+              <a href="\${justWatchLink(d2.movies.number_one)}" target="_blank" rel="noopener" class="media-link media-link-watch">📺 Watch</a>
+              <a href="\${imdbLink(d2.movies.number_one)}" target="_blank" rel="noopener" class="media-link media-link-imdb">⭐ IMDb</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">Top TV Shows</div>
+            <ul class="compare-list">
+              ${d1.tv_shows.slice(0, 3).map(tv => `<li>📺 ${tv}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="compare-delta"><span class="compare-vs-badge" style="font-size:1rem">📺</span></div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">Top TV Shows</div>
+            <ul class="compare-list">
+              ${d2.tv_shows.slice(0, 3).map(tv => `<li>📺 ${tv}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+
+        <div class="compare-category-header reveal">💵 Economics & Cost of Living</div>
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">${y1} Avg Salary</div>
+            <div class="compare-cell-value" style="font-size:1.5rem">$${d1.salary.average.toLocaleString()}</div>
+          </div>
+          <div class="compare-delta">
+            <span class="delta-pill ${parseFloat(salaryPct) >= 0 ? 'up' : 'down'}">${parseFloat(salaryPct) >= 0 ? '+' : ''}${salaryPct}%</span>
+          </div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">${y2} Avg Salary</div>
+            <div class="compare-cell-value" style="font-size:1.5rem">$${d2.salary.average.toLocaleString()}</div>
+          </div>
+        </div>
+
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">Average Home</div>
+            <div class="compare-cell-value" style="font-size:1.5rem">$${d1.prices.avg_home.toLocaleString()}</div>
+          </div>
+          <div class="compare-delta">
+            <span class="delta-pill ${parseFloat(homePct) >= 0 ? 'up' : 'down'}">${parseFloat(homePct) >= 0 ? '+' : ''}${homePct}%</span>
+          </div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">Average Home</div>
+            <div class="compare-cell-value" style="font-size:1.5rem">$${d2.prices.avg_home.toLocaleString()}</div>
+          </div>
+        </div>
+        
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">Gas / Gallon</div>
+            <div class="compare-cell-value">$${d1.prices.gas_gallon.toFixed(2)}</div>
+          </div>
+          <div class="compare-delta">
+            <span class="delta-pill ${parseFloat(gasPct) >= 0 ? 'up' : 'down'}">${parseFloat(gasPct) >= 0 ? '+' : ''}${gasPct}%</span>
+          </div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">Gas / Gallon</div>
+            <div class="compare-cell-value">$${d2.prices.gas_gallon.toFixed(2)}</div>
+          </div>
+        </div>
+
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">New Car</div>
+            <div class="compare-cell-value" style="font-size:1.5rem">$${d1.prices.new_car.toLocaleString()}</div>
+          </div>
+          <div class="compare-delta"><span class="compare-vs-badge" style="font-size:1rem">🚗</span></div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">New Car</div>
+            <div class="compare-cell-value" style="font-size:1.5rem">$${d2.prices.new_car.toLocaleString()}</div>
+          </div>
+        </div>
+
+        <div class="compare-category-header reveal">⚡ Technology & Milestones</div>
+        
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">Key Tech Breakthroughs</div>
+            <ul class="compare-list">
+              ${d1.technology.slice(0, 3).map(tech => `<li>💡 ${tech}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="compare-delta"><span class="compare-vs-badge" style="font-size:1rem">🚀</span></div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">Key Tech Breakthroughs</div>
+            <ul class="compare-list">
+              ${d2.technology.slice(0, 3).map(tech => `<li>💡 ${tech}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+
+        <div class="compare-category-header reveal">🏆 Sports Champions</div>
+        
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">World Series & Super Bowl</div>
+            <ul class="compare-list">
+              <li>⚾ ${d1.sports.world_series || 'N/A'}</li>
+              <li>🏈 ${d1.sports.super_bowl || d1.sports.nfl_champion || 'N/A'}</li>
+            </ul>
+          </div>
+          <div class="compare-delta"><span class="compare-vs-badge" style="font-size:1rem">🏅</span></div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">World Series & Super Bowl</div>
+            <ul class="compare-list">
+              <li>⚾ ${d2.sports.world_series || 'N/A'}</li>
+              <li>🏈 ${d2.sports.super_bowl || d2.sports.nfl_champion || 'N/A'}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="compare-category-header reveal">🌱 Environment</div>
+        <div class="compare-row reveal">
+          <div class="compare-cell">
+            <div class="compare-cell-label">${y1} CO₂ Levels</div>
+            <div class="compare-cell-value">${d1.environment.co2_ppm} ppm</div>
+          </div>
+          <div class="compare-delta">
+            <span class="delta-pill up">+${co2Pct}%</span>
+          </div>
+          <div class="compare-cell">
+            <div class="compare-cell-label">${y2} CO₂ Levels</div>
+            <div class="compare-cell-value">${d2.environment.co2_ppm} ppm</div>
+          </div>
+        </div>
+
+        <div class="chart-container reveal" id="chartContainer">
+          <div class="chart-title">At a Glance</div>
+          <div class="chart-bars">
+            <div class="chart-bar-group">
+              <div class="chart-bar-value">$${d1.prices.gas_gallon.toFixed(2)}</div>
+              <div class="chart-bar bar-1" id="bar1Gas" style="height:0px"></div>
+              <div class="chart-bar-label">${y1} Gas</div>
+            </div>
+            <div class="chart-bar-group">
+              <div class="chart-bar-value">$${d2.prices.gas_gallon.toFixed(2)}</div>
+              <div class="chart-bar bar-2" id="bar2Gas" style="height:0px"></div>
+              <div class="chart-bar-label">${y2} Gas</div>
+            </div>
+            <div class="chart-bar-group">
+              <div class="chart-bar-value">${d1.environment.co2_ppm}</div>
+              <div class="chart-bar bar-1" id="bar1Co2" style="height:0px"></div>
+              <div class="chart-bar-label">${y1} CO₂</div>
+            </div>
+            <div class="chart-bar-group">
+              <div class="chart-bar-value">${d2.environment.co2_ppm}</div>
+              <div class="chart-bar bar-2" id="bar2Co2" style="height:0px"></div>
+              <div class="chart-bar-label">${y2} CO₂</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Re-observe reveals
+      const reveals = resultsDiv.querySelectorAll('.reveal, .compare-row');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+      }, { threshold: 0.1 });
+      reveals.forEach(el => observer.observe(el));
+
+      // Animate chart bars after a delay
+      setTimeout(() => {
+        const maxGas = Math.max(d1.prices.gas_gallon, d2.prices.gas_gallon);
+        const maxCo2 = Math.max(d1.environment.co2_ppm, d2.environment.co2_ppm);
+        const bar1Gas = document.getElementById('bar1Gas');
+        const bar2Gas = document.getElementById('bar2Gas');
+        const bar1Co2 = document.getElementById('bar1Co2');
+        const bar2Co2 = document.getElementById('bar2Co2');
+        if (bar1Gas) bar1Gas.style.height = (d1.prices.gas_gallon / maxGas * 150) + 'px';
+        if (bar2Gas) bar2Gas.style.height = (d2.prices.gas_gallon / maxGas * 150) + 'px';
+        if (bar1Co2) bar1Co2.style.height = (d1.environment.co2_ppm / maxCo2 * 150) + 'px';
+        if (bar2Co2) bar2Co2.style.height = (d2.environment.co2_ppm / maxCo2 * 150) + 'px';
+      }, 800);
+    }
+
+    selectY1.addEventListener('change', renderComparison);
+    selectY2.addEventListener('change', renderComparison);
+
+    // Initial render
+    renderComparison();
+  </script>
+</Layout>

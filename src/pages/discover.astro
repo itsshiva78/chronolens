@@ -1,0 +1,1048 @@
+---
+import Layout from '../layouts/Layout.astro';
+import yearsData from '../data/years.json';
+import countriesData from '../data/countries.json';
+
+const availableYears = Object.keys(yearsData).map(Number).sort((a, b) => a - b);
+const countries = Object.keys(countriesData).sort();
+---
+
+<Layout title="Discover Your Year">
+  <style is:global>
+    /* ========== DISCOVER FORM ========== */
+    .discover-hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 6rem 2rem;
+      position: relative;
+    }
+    .discover-hero-glow {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(0,212,170,0.06) 0%, transparent 70%);
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .discover-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    .discover-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 3rem;
+      max-width: 500px;
+    }
+
+    .discover-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      z-index: 1;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: left;
+    }
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .form-input, .form-select {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      padding: 1rem 1.2rem;
+      border-radius: var(--radius-md);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      outline: none;
+      width: 100%;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 25px var(--accent-glow);
+      background: rgba(255,255,255,0.06);
+    }
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+    .form-select option {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-submit {
+      margin-top: 1rem;
+      background: var(--accent-gradient);
+      color: var(--bg-deep);
+      border: none;
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 1rem 2rem;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .form-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px var(--accent-glow);
+    }
+    .form-submit:active {
+      transform: translateY(0);
+    }
+
+    /* ========== RESULTS ========== */
+    .results-wrapper {
+      display: none;
+      padding: 0 1.5rem 6rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .results-wrapper.visible {
+      display: block;
+    }
+
+    /* Cinematic Reveal */
+    .reveal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: var(--bg-deep);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .reveal-overlay.active {
+      display: flex;
+      animation: reveal-fade-in 0.3s ease;
+    }
+    @keyframes reveal-fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .reveal-text-line {
+      font-family: var(--font-heading);
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      color: var(--text-secondary);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .reveal-text-line.show {
+      animation: text-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes text-reveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reveal-year-big {
+      font-family: var(--font-heading);
+      font-size: clamp(6rem, 20vw, 14rem);
+      font-weight: 900;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      opacity: 0;
+      transform: scale(2);
+    }
+    .reveal-year-big.show {
+      animation: year-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes year-reveal {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Personalized Header */
+    .personal-header {
+      text-align: center;
+      padding: 4rem 2rem;
+      margin-bottom: 2rem;
+    }
+    .personal-greeting {
+      font-family: var(--font-heading);
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 300;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    .personal-greeting strong {
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    .personal-year {
+      font-family: var(--font-heading);
+      font-size: clamp(4rem, 12vw, 8rem);
+      font-weight: 900;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    .personal-age {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+    .personal-flag {
+      font-size: 3rem;
+      margin-top: 1rem;
+    }
+
+    /* Country Section */
+    .country-section {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-xl);
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .country-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--accent-gradient);
+    }
+    .country-flag-large {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    .country-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .country-section-sub {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin-bottom: 1.5rem;
+    }
+    .country-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+    .country-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+    .country-card:hover {
+      border-color: var(--accent-primary);
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-3px);
+    }
+    .country-card-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .country-card-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .country-card-value {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .country-event-highlight {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: rgba(0,212,170,0.05);
+      border-left: 3px solid var(--accent-primary);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+    .country-event-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin-bottom: 0.3rem;
+    }
+    .country-event-text {
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    .country-funfact {
+      margin-top: 1rem;
+      padding: 1rem 1.5rem;
+      background: rgba(124,58,237,0.05);
+      border-left: 3px solid #7C3AED;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+    .country-funfact-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #7C3AED;
+      margin-bottom: 0.3rem;
+    }
+
+    /* World Section */
+    .world-section {
+      margin-bottom: 2rem;
+    }
+    .world-section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .world-section-icon {
+      font-size: 1.5rem;
+    }
+    .world-section-title {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+    }
+    .world-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+    .world-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .world-card:hover {
+      border-color: var(--border-glass-hover);
+      transform: translateY(-3px);
+    }
+    .world-card-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .world-card-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .world-card-value {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .world-card-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    /* Media link buttons */
+    .media-links-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .media-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.3s;
+      border: 1px solid;
+    }
+    .media-link-spotify {
+      color: #1DB954;
+      border-color: rgba(29,185,84,0.3);
+      background: rgba(29,185,84,0.06);
+    }
+    .media-link-spotify:hover { background: rgba(29,185,84,0.15); border-color: #1DB954; }
+    
+    .media-link-youtube {
+      color: #FF0000;
+      border-color: rgba(255,0,0,0.3);
+      background: rgba(255,0,0,0.06);
+    }
+    .media-link-youtube:hover { background: rgba(255,0,0,0.15); border-color: #FF0000; }
+    
+    .media-link-watch {
+      color: #E50914;
+      border-color: rgba(229,9,20,0.3);
+      background: rgba(229,9,20,0.06);
+    }
+    .media-link-watch:hover { background: rgba(229,9,20,0.15); border-color: #E50914; }
+    
+    .media-link-imdb {
+      color: #F5C518;
+      border-color: rgba(245,197,24,0.3);
+      background: rgba(245,197,24,0.06);
+    }
+    .media-link-imdb:hover { background: rgba(245,197,24,0.15); border-color: #F5C518; }
+
+    /* Events list */
+    .events-list {
+      margin-top: 1.5rem;
+    }
+    .event-item-d {
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+    .event-dot {
+      width: 8px;
+      height: 8px;
+      min-width: 8px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      margin-top: 0.5rem;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+    .event-text-d {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Price comparison */
+    .price-compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .price-mini {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .price-mini-icon { font-size: 1.3rem; margin-bottom: 0.3rem; }
+    .price-mini-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .price-mini-then {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin: 0.3rem 0;
+    }
+    .price-mini-now {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Bottom CTA */
+    .discover-cta {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 3rem 2rem;
+    }
+    .discover-cta p {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+    .cta-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Start Over */
+    .start-over-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 100;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: none;
+      transition: all 0.3s;
+    }
+    .start-over-btn.visible { display: block; }
+    .start-over-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 768px) {
+      .form-row { grid-template-columns: 1fr; }
+      .country-grid { grid-template-columns: 1fr; }
+      .world-grid { grid-template-columns: 1fr; }
+      .price-compare-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+
+  <!-- Cinematic Reveal Overlay -->
+  <div class="reveal-overlay" id="revealOverlay">
+    <div class="reveal-text-line" id="revealLine1"></div>
+    <div class="reveal-text-line" id="revealLine2" style="margin-top: 0.5rem;"></div>
+    <div class="reveal-year-big" id="revealYear" style="margin-top: 1rem;"></div>
+    <div class="reveal-text-line" id="revealLine3" style="margin-top: 1rem;"></div>
+  </div>
+
+  <!-- FORM -->
+  <section class="discover-hero" id="formSection">
+    <div class="discover-hero-glow"></div>
+    
+    <div class="section-label reveal">✦ Your Personal Time Capsule</div>
+    <h1 class="discover-title reveal"><span class="gradient-text">Discover Your Year</span></h1>
+    <p class="discover-subtitle reveal">
+      Enter your details and we'll show you exactly what the world looked like 
+      on the day you were born — globally and in your country.
+    </p>
+
+    <form class="discover-form reveal" id="discoverForm">
+      <div class="form-group">
+        <label class="form-label" for="userName">Your Name</label>
+        <input 
+          type="text" 
+          class="form-input" 
+          id="userName" 
+          name="name" 
+          placeholder="Enter your name..." 
+          required 
+          autocomplete="given-name"
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="userCountry">Your Country</label>
+          <select class="form-select" id="userCountry" name="country" required>
+            <option value="" disabled selected>Select country...</option>
+            {countries.map(c => (
+              <option value={c}>{countriesData[c as keyof typeof countriesData].flag} {c}</option>
+            ))}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="userDob">Date of Birth</label>
+          <input 
+            type="date" 
+            class="form-input" 
+            id="userDob" 
+            name="dob" 
+            required
+            min="1948-01-01"
+            max="2025-12-31"
+          />
+        </div>
+      </div>
+
+      <button type="submit" class="form-submit" id="submitBtn">
+        🔭 Discover My Year →
+      </button>
+    </form>
+  </section>
+
+  <!-- RESULTS -->
+  <div class="results-wrapper" id="resultsWrapper">
+    <!-- Filled by JS -->
+  </div>
+
+  <!-- Start Over Button -->
+  <button class="start-over-btn" id="startOverBtn">⟲ Start Over</button>
+
+  <script define:vars={{ yearsData, countriesData, availableYears }}>
+    const form = document.getElementById('discoverForm');
+    const formSection = document.getElementById('formSection');
+    const resultsWrapper = document.getElementById('resultsWrapper');
+    const overlay = document.getElementById('revealOverlay');
+    const startOverBtn = document.getElementById('startOverBtn');
+
+    function findClosestYear(birthYear) {
+      const years = availableYears;
+      let closest = years[0];
+      let minDiff = Math.abs(birthYear - closest);
+      for (const y of years) {
+        const diff = Math.abs(birthYear - y);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closest = y;
+        }
+      }
+      return String(closest);
+    }
+
+    function formatPop(val) {
+      if (val >= 1000000000) return (val / 1000000000).toFixed(2) + 'B';
+      if (val >= 1000000) return (val / 1000000).toFixed(0) + 'M';
+      return val.toLocaleString();
+    }
+
+    function calculateAge(dobStr) {
+      const dob = new Date(dobStr);
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) age--;
+      return age;
+    }
+
+    function spotifyLink(song, artist) {
+      return `https://open.spotify.com/search/${encodeURIComponent(song + ' ' + artist)}`;
+    }
+    
+    function youtubeLink(song, artist) {
+      return `https://www.youtube.com/results?search_query=${encodeURIComponent(song + ' ' + artist + ' official')}`;
+    }
+    
+    function imdbLink(movie) {
+      return `https://www.imdb.com/find/?q=${encodeURIComponent(movie)}&s=tt`;
+    }
+    
+    function justWatchLink(movie) {
+      return `https://www.justwatch.com/us/search?q=${encodeURIComponent(movie)}`;
+    }
+
+    function cinematicReveal(name, birthYear, country, callback) {
+      const countryData = countriesData[country];
+      const flag = countryData ? countryData.flag : '🌍';
+
+      overlay.classList.add('active');
+      const line1 = document.getElementById('revealLine1');
+      const line2 = document.getElementById('revealLine2');
+      const yearEl = document.getElementById('revealYear');
+      const line3 = document.getElementById('revealLine3');
+
+      // Sequence
+      setTimeout(() => {
+        line1.textContent = `Hey ${name}...`;
+        line1.classList.add('show');
+      }, 500);
+
+      setTimeout(() => {
+        line2.textContent = `The year you were born ${flag}`;
+        line2.classList.add('show');
+      }, 1500);
+
+      setTimeout(() => {
+        yearEl.textContent = birthYear;
+        yearEl.classList.add('show');
+      }, 2500);
+
+      setTimeout(() => {
+        line3.textContent = `Here's what the world looked like...`;
+        line3.classList.add('show');
+      }, 3500);
+
+      setTimeout(() => {
+        overlay.style.transition = 'opacity 0.8s ease';
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.classList.remove('active');
+          overlay.style.opacity = '';
+          overlay.style.transition = '';
+          line1.classList.remove('show');
+          line2.classList.remove('show');
+          yearEl.classList.remove('show');
+          line3.classList.remove('show');
+          callback();
+        }, 800);
+      }, 5000);
+    }
+
+    function renderResults(name, country, dob) {
+      const birthYear = new Date(dob).getFullYear();
+      const closestYear = findClosestYear(birthYear);
+      const data = yearsData[closestYear];
+      const age = calculateAge(dob);
+      const countryInfo = countriesData[country];
+      const countryYear = countryInfo?.years[closestYear];
+      const flag = countryInfo?.flag || '🌍';
+      const todayPrices = yearsData["2025"]?.prices || {};
+
+      let html = `
+        <div class="personal-header reveal">
+          <div class="personal-greeting">Hello, <strong>${name}</strong> 👋</div>
+          <div class="personal-year">${birthYear}</div>
+          <div class="personal-age">You are <strong>${age} years old</strong> • Born in ${country} ${flag}</div>
+        </div>
+      `;
+
+      // COUNTRY SECTION
+      if (countryYear) {
+        html += `
+          <section class="country-section reveal">
+            <div class="country-flag-large">${flag}</div>
+            <div class="country-section-sub">In ${country} That Year</div>
+            <div class="country-section-title">Your Country in ${closestYear}</div>
+
+            <div class="country-grid" data-stagger>
+              <div class="country-card reveal">
+                <div class="country-card-icon">👔</div>
+                <div class="country-card-label">National Leader</div>
+                <div class="country-card-value info-clickable" onclick="openInfoModal(this.innerText, 'politician')">${countryYear.leader}</div>
+              </div>
+              <div class="country-card reveal">
+                <div class="country-card-icon">👥</div>
+                <div class="country-card-label">${country} Population</div>
+                <div class="country-card-value">${formatPop(countryYear.population)}</div>
+              </div>
+              <div class="country-card reveal">
+                <div class="country-card-icon">💱</div>
+                <div class="country-card-label">Currency</div>
+                <div class="country-card-value">${countryInfo.currency}</div>
+              </div>
+            </div>
+
+            <div class="country-event-highlight reveal">
+              <div class="country-event-label">📌 What Was Happening</div>
+              <div class="country-event-text info-clickable" onclick="openInfoModal(this.innerText, 'event')">${countryYear.event}</div>
+            </div>
+
+            <div class="country-funfact reveal">
+              <div class="country-funfact-label">💡 Did You Know?</div>
+              <div class="country-event-text">${countryYear.fun_fact}</div>
+            </div>
+          </section>
+        `;
+      }
+
+      // WORLD SECTION - Leaders
+      html += `
+        <div class="world-section">
+          <div class="world-section-header reveal">
+            <span class="world-section-icon">🌍</span>
+            <span class="world-section-title">The World Stage</span>
+          </div>
+          <div class="world-grid" data-stagger>
+            <div class="world-card reveal">
+              <div class="world-card-icon">🇺🇸</div>
+              <div class="world-card-label">US President</div>
+              <div class="world-card-value info-clickable" onclick="openInfoModal(this.innerText, 'politician')">${data.leaders.us_president}</div>
+            </div>
+            <div class="world-card reveal">
+              <div class="world-card-icon">🇬🇧</div>
+              <div class="world-card-label">UK Prime Minister</div>
+              <div class="world-card-value info-clickable" onclick="openInfoModal(this.innerText, 'politician')">${data.leaders.uk_pm}</div>
+            </div>
+            <div class="world-card reveal">
+              <div class="world-card-icon">🇺🇳</div>
+              <div class="world-card-label">UN Secretary-General</div>
+              <div class="world-card-value info-clickable" onclick="openInfoModal(this.innerText, 'politician')">${data.leaders.un_sg}</div>
+            </div>
+            <div class="world-card reveal">
+              <div class="world-card-icon">🌏</div>
+              <div class="world-card-label">World Population</div>
+              <div class="world-card-value">${formatPop(data.population.value)}</div>
+              <div class="world-card-sub">Today: ${formatPop(data.population.today)}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // CULTURE
+      html += `
+        <div class="world-section">
+          <div class="world-section-header">
+            <span class="world-section-icon">🎭</span>
+            <span class="world-section-title">Culture & Entertainment</span>
+          </div>
+          <div class="world-grid">
+            <div class="world-card">
+              <div class="world-card-icon">🎵</div>
+              <div class="world-card-label">#1 Song</div>
+              <div class="world-card-value info-clickable" onclick="openInfoModal(this.innerText, 'song')">${data.music.number_one}</div>
+              <div class="world-card-sub info-clickable" onclick="openInfoModal(this.innerText, 'musician')">by ${data.music.artist}</div>
+              <div class="media-links-row">
+                <a href="${spotifyLink(data.music.number_one, data.music.artist)}" target="_blank" rel="noopener" class="media-link media-link-spotify">🎧 Spotify</a>
+                <a href="${youtubeLink(data.music.number_one, data.music.artist)}" target="_blank" rel="noopener" class="media-link media-link-youtube">▶ YouTube</a>
+              </div>
+            </div>
+            <div class="world-card">
+              <div class="world-card-icon">🎬</div>
+              <div class="world-card-label">#1 Movie</div>
+              <div class="world-card-value info-clickable" onclick="openInfoModal(this.innerText, 'film')">${data.movies.number_one}</div>
+              <div class="world-card-sub">Oscar: ${data.movies.oscar_best_picture}</div>
+              <div class="media-links-row">
+                <a href="${justWatchLink(data.movies.number_one)}" target="_blank" rel="noopener" class="media-link media-link-watch">📺 Where to Watch</a>
+                <a href="${imdbLink(data.movies.number_one)}" target="_blank" rel="noopener" class="media-link media-link-imdb">⭐ IMDb</a>
+              </div>
+            </div>
+            <div class="world-card">
+              <div class="world-card-icon">📺</div>
+              <div class="world-card-label">Top TV Shows</div>
+              <div class="world-card-value">${data.tv_shows.slice(0, 2).join(', ')}</div>
+            </div>
+            <div class="world-card">
+              <div class="world-card-icon">📖</div>
+              <div class="world-card-label">Notable Books</div>
+              <div class="world-card-value">${data.books.slice(0, 2).join(', ')}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // KEY EVENTS
+      html += `
+        <div class="world-section">
+          <div class="world-section-header reveal">
+            <span class="world-section-icon">📰</span>
+            <span class="world-section-title">Defining Events of ${closestYear}</span>
+          </div>
+          <div class="events-list" data-stagger>
+            ${data.events.map(e => `
+              <div class="event-item-d reveal">
+                <div class="event-dot"></div>
+                <div class="event-text-d">${e}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // TECH
+      html += `
+        <div class="world-section">
+          <div class="world-section-header reveal">
+            <span class="world-section-icon">🔬</span>
+            <span class="world-section-title">Technology & Science</span>
+          </div>
+          <div class="world-grid" data-stagger>
+            ${data.technology.map(t => `
+              <div class="world-card reveal">
+                <div class="world-card-icon">⚡</div>
+                <div class="world-card-value">${t}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // PRICES
+      html += `
+        <div class="world-section">
+          <div class="world-section-header reveal">
+            <span class="world-section-icon">💰</span>
+            <span class="world-section-title">What Things Cost in ${closestYear}</span>
+          </div>
+          <div class="price-compare-grid" data-stagger>
+            <div class="price-mini reveal">
+              <div class="price-mini-icon">⛽</div>
+              <div class="price-mini-label">Gas</div>
+              <div class="price-mini-then">$${data.prices.gas_gallon.toFixed(2)}</div>
+              <div class="price-mini-now">Today: $${todayPrices.gas_gallon?.toFixed(2) || 'N/A'}</div>
+            </div>
+            <div class="price-mini reveal">
+              <div class="price-mini-icon">🥛</div>
+              <div class="price-mini-label">Milk</div>
+              <div class="price-mini-then">$${data.prices.milk_gallon.toFixed(2)}</div>
+              <div class="price-mini-now">Today: $${todayPrices.milk_gallon?.toFixed(2) || 'N/A'}</div>
+            </div>
+            <div class="price-mini reveal">
+              <div class="price-mini-icon">🎬</div>
+              <div class="price-mini-label">Movie Ticket</div>
+              <div class="price-mini-then">$${data.prices.movie_ticket.toFixed(2)}</div>
+              <div class="price-mini-now">Today: $${todayPrices.movie_ticket?.toFixed(2) || 'N/A'}</div>
+            </div>
+            <div class="price-mini reveal">
+              <div class="price-mini-icon">🏠</div>
+              <div class="price-mini-label">Average Home</div>
+              <div class="price-mini-then">$${data.prices.avg_home.toLocaleString()}</div>
+              <div class="price-mini-now">Today: $${todayPrices.avg_home?.toLocaleString() || 'N/A'}</div>
+            </div>
+            <div class="price-mini reveal">
+              <div class="price-mini-icon">🚗</div>
+              <div class="price-mini-label">New Car</div>
+              <div class="price-mini-then">$${data.prices.new_car.toLocaleString()}</div>
+              <div class="price-mini-now">Today: $${todayPrices.new_car?.toLocaleString() || 'N/A'}</div>
+            </div>
+            <div class="price-mini reveal">
+              <div class="price-mini-icon">💵</div>
+              <div class="price-mini-label">Avg Salary</div>
+              <div class="price-mini-then">$${data.salary.average.toLocaleString()}</div>
+              <div class="price-mini-now">Today: $${yearsData["2025"]?.salary.average.toLocaleString() || 'N/A'}</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // SPORTS
+      html += `
+        <div class="world-section">
+          <div class="world-section-header reveal">
+            <span class="world-section-icon">🏆</span>
+            <span class="world-section-title">Sports Champions</span>
+          </div>
+          <div class="world-grid" data-stagger>
+            ${data.sports.world_series ? `<div class="world-card reveal"><div class="world-card-icon">⚾</div><div class="world-card-label">World Series</div><div class="world-card-value">${data.sports.world_series}</div></div>` : ''}
+            ${data.sports.nba_finals ? `<div class="world-card reveal"><div class="world-card-icon">🏀</div><div class="world-card-label">NBA Finals</div><div class="world-card-value">${data.sports.nba_finals}</div></div>` : ''}
+            ${data.sports.super_bowl || data.sports.nfl_champion ? `<div class="world-card reveal"><div class="world-card-icon">🏈</div><div class="world-card-label">${data.sports.super_bowl ? 'Super Bowl' : 'NFL'}</div><div class="world-card-value">${data.sports.super_bowl || data.sports.nfl_champion}</div></div>` : ''}
+            ${data.sports.fifa_world_cup ? `<div class="world-card reveal"><div class="world-card-icon">⚽</div><div class="world-card-label">FIFA World Cup</div><div class="world-card-value">${data.sports.fifa_world_cup}</div></div>` : ''}
+          </div>
+        </div>
+      `;
+
+      // ENVIRONMENT
+      html += `
+        <div class="world-section">
+          <div class="world-section-header reveal">
+            <span class="world-section-icon">🌱</span>
+            <span class="world-section-title">Our Planet</span>
+          </div>
+          <div class="world-grid" data-stagger>
+            <div class="world-card reveal">
+              <div class="world-card-icon">🌡️</div>
+              <div class="world-card-label">CO₂ Levels</div>
+              <div class="world-card-value">${data.environment.co2_ppm} ppm</div>
+              <div class="world-card-sub">Today: 422 ppm</div>
+            </div>
+            <div class="world-card reveal">
+              <div class="world-card-icon">🌍</div>
+              <div class="world-card-label">Temperature Anomaly</div>
+              <div class="world-card-value">${data.environment.temp_anomaly > 0 ? '+' : ''}${data.environment.temp_anomaly}°C</div>
+              <div class="world-card-sub">vs. pre-industrial • Today: +1.45°C</div>
+            </div>
+            <div class="world-card reveal">
+              <div class="world-card-icon">❤️</div>
+              <div class="world-card-label">Life Expectancy</div>
+              <div class="world-card-value">${data.life_expectancy} years</div>
+            </div>
+            ${data.internet ? `<div class="world-card reveal"><div class="world-card-icon">🌐</div><div class="world-card-label">Internet</div><div class="world-card-value">${data.internet}</div></div>` : ''}
+          </div>
+        </div>
+      `;
+
+      // CTA
+      html += `
+        <div class="discover-cta reveal">
+          <p>Want to dive deeper into ${closestYear}?</p>
+          <div class="cta-links">
+            <a href="/year/${closestYear}" class="btn btn-primary">Explore ${closestYear} in Full →</a>
+            <a href="/compare?y1=${closestYear}&y2=2025" class="btn btn-outline">Compare ${closestYear} vs 2025 →</a>
+          </div>
+        </div>
+      `;
+
+      resultsWrapper.innerHTML = html;
+    }
+
+    function showResults() {
+      formSection.style.display = 'none';
+      resultsWrapper.classList.add('visible');
+      startOverBtn.classList.add('visible');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      // Re-observe reveal elements
+      setTimeout(() => {
+        const reveals = resultsWrapper.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        reveals.forEach(el => observer.observe(el));
+
+        const staggerGroups = resultsWrapper.querySelectorAll('[data-stagger]');
+        const staggerObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              Array.from(entry.target.children).forEach((child, i) => {
+                setTimeout(() => child.classList.add('active'), i * 120);
+              });
+            }
+          });
+        }, { threshold: 0.2 });
+        staggerGroups.forEach(el => staggerObserver.observe(el));
+      }, 100);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('userName').value.trim();
+      const country = document.getElementById('userCountry').value;
+      const dob = document.getElementById('userDob').value;
+
+      if (!name || !country || !dob) return;
+
+      const birthYear = new Date(dob).getFullYear();
+
+      // Render results content first (hidden)
+      renderResults(name, country, dob);
+
+      // Play cinematic reveal
+      cinematicReveal(name, birthYear, country, showResults);
+    });
+
+    startOverBtn.addEventListener('click', () => {
+      formSection.style.display = '';
+      resultsWrapper.classList.remove('visible');
+      resultsWrapper.innerHTML = '';
+      startOverBtn.classList.remove('visible');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</Layout>

@@ -1,0 +1,810 @@
+---
+import Layout from '../layouts/Layout.astro';
+import yearsData from '../data/years.json';
+import decadesData from '../data/decades.json';
+
+const availableYears = Object.keys(yearsData).sort();
+const decades = Object.entries(decadesData);
+---
+
+<Layout title="ChronoLens — Travel Through Time">
+  <style>
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 2rem;
+    }
+    .hero-glow-1 {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 70%);
+      top: 10%;
+      left: -10%;
+      pointer-events: none;
+    }
+    .hero-glow-2 {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(65,105,225,0.06) 0%, transparent 70%);
+      bottom: 10%;
+      right: -5%;
+      pointer-events: none;
+    }
+    .hero-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      background: rgba(0,212,170,0.08);
+      border: 1px solid rgba(0,212,170,0.2);
+      padding: 0.4rem 1.2rem;
+      border-radius: var(--radius-full);
+      margin-bottom: 2rem;
+    }
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(3rem, 10vw, 8rem);
+      font-weight: 900;
+      letter-spacing: 6px;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .hero-title .chrono {
+      background: linear-gradient(135deg, #00D4AA, #4169E1, #9B59B6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-title .lens {
+      color: var(--text-primary);
+      -webkit-text-fill-color: var(--text-primary);
+    }
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: pulse-scroll 2s ease-in-out infinite;
+    }
+    .hero-scroll-arrow {
+      width: 24px;
+      height: 24px;
+      border-right: 2px solid var(--text-muted);
+      border-bottom: 2px solid var(--text-muted);
+      transform: rotate(45deg);
+    }
+    @keyframes pulse-scroll {
+      0%, 100% { opacity: 0.4; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(8px); }
+    }
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 1rem;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat-number {
+      font-family: var(--font-mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.3rem;
+    }
+
+    /* ========== YEAR SELECTOR ========== */
+    .year-selector-section {
+      padding: 6rem 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+    .year-selector-section h2 {
+      margin-bottom: 0.5rem;
+    }
+    .year-selector-section .section-subtitle {
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+    }
+    .year-slider-container {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto 2rem;
+    }
+    .year-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, 
+        var(--decade-50s-primary), 
+        var(--decade-60s-primary), 
+        var(--decade-70s-primary), 
+        var(--decade-80s-primary), 
+        var(--decade-90s-primary), 
+        var(--decade-00s-primary),
+        var(--decade-10s-primary),
+        var(--decade-20s-primary)
+      );
+      outline: none;
+      cursor: pointer;
+    }
+    .year-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      cursor: grab;
+      box-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow);
+      border: 3px solid var(--bg-deep);
+      transition: transform 0.2s;
+    }
+    .year-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+    .year-slider::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      cursor: grab;
+      box-shadow: 0 0 20px var(--accent-glow);
+      border: 3px solid var(--bg-deep);
+    }
+    .year-display {
+      font-family: var(--font-heading);
+      font-size: clamp(4rem, 12vw, 8rem);
+      font-weight: 900;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s;
+    }
+    .year-slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    /* Year Preview Card */
+    .year-preview {
+      max-width: 700px;
+      margin: 2rem auto;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .year-preview.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .preview-item {
+      text-align: center;
+      padding: 1rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .preview-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .preview-value {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .preview-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.3rem;
+    }
+    .explore-btn {
+      margin-top: 2rem;
+    }
+
+    /* ========== DECADE CARDS ========== */
+    .decades-section {
+      padding: 6rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .decades-section h2 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .decades-section .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+    }
+    .decades-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .decade-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .decade-card.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .decade-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--card-gradient);
+      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .decade-card:hover::before {
+      height: 100%;
+      opacity: 0.08;
+    }
+    .decade-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255,255,255,0.15);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--card-glow);
+    }
+    .decade-card-name {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+      background: var(--card-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .decade-card-tagline {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+      line-height: 1.4;
+    }
+    .decade-card-arrow {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      transition: transform 0.3s, color 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+    .decade-card:hover .decade-card-arrow {
+      transform: translateX(5px);
+      color: var(--text-primary);
+    }
+
+    /* ========== COMPARE SECTION ========== */
+    .compare-section {
+      padding: 6rem 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .compare-section h2 {
+      margin-bottom: 0.5rem;
+    }
+    .compare-section .section-subtitle {
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+    }
+    .compare-form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .compare-select-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .compare-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+    }
+    .compare-select {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-glass);
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      text-align: center;
+      min-width: 160px;
+      transition: border-color 0.3s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .compare-select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .compare-select option {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+    }
+    .compare-vs {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* ========== FEATURED FACTS ========== */
+    .facts-section {
+      padding: 6rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .facts-section h2 {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .facts-marquee {
+      overflow: hidden;
+      white-space: nowrap;
+      margin: 0 -1.5rem;
+    }
+    .facts-track {
+      display: inline-flex;
+      gap: 1.5rem;
+      animation: marquee 40s linear infinite;
+    }
+    .fact-card {
+      flex-shrink: 0;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 2rem;
+      min-width: 300px;
+      white-space: normal;
+    }
+    .fact-year {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-primary);
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+    }
+    .fact-text {
+      font-size: 1rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 1024px) {
+      .decades-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .hero-stats { flex-direction: column; gap: 1.5rem; }
+      .decades-grid { grid-template-columns: 1fr; }
+      .preview-grid { grid-template-columns: repeat(2, 1fr); }
+      .compare-form { flex-direction: column; gap: 1rem; }
+    }
+  </style>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    
+    <div class="hero-badge reveal">✦ 75 Years of History</div>
+    
+    <h1 class="hero-title reveal">
+      <span class="chrono">CHRONO</span><span class="lens">LENS</span>
+    </h1>
+    
+    <p class="hero-subtitle reveal">
+      Travel through time. See the world as it was — the music, the leaders, 
+      the prices, the breakthroughs, and the moments that shaped humanity.
+    </p>
+
+    <a href="/discover" class="btn btn-primary reveal" style="margin-bottom: 2rem; font-size: 1.1rem; padding: 1rem 2.5rem;">
+      🔭 Discover Your Year →
+    </a>
+
+    <div class="hero-stats reveal">
+      <div class="hero-stat">
+        <div class="hero-stat-number" data-counter="75">0</div>
+        <div class="hero-stat-label">Years of Data</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-number" data-counter="14">0</div>
+        <div class="hero-stat-label">Categories</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-number" data-counter="10000">0</div>
+        <div class="hero-stat-label">Data Points</div>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll to explore</span>
+      <div class="hero-scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- YEAR SELECTOR -->
+  <section class="year-selector-section" id="yearSelector">
+    <div class="section-label reveal">Choose a Year</div>
+    <h2 class="reveal">Explore Any Year</h2>
+    <p class="section-subtitle reveal">Slide through time and discover what the world looked like</p>
+
+    <div class="year-display reveal" id="yearDisplay">1990</div>
+
+    <div class="year-slider-container reveal">
+      <input 
+        type="range" 
+        class="year-slider" 
+        id="yearSlider"
+        min="1950" 
+        max="2025" 
+        value="1990" 
+        step="5"
+      />
+      <div class="year-slider-labels">
+        <span>1950</span>
+        <span>1960</span>
+        <span>1970</span>
+        <span>1980</span>
+        <span>1990</span>
+        <span>2000</span>
+        <span>2010</span>
+        <span>2025</span>
+      </div>
+    </div>
+
+    <div class="year-preview glass-card-static visible" id="yearPreview">
+      <div class="preview-grid" id="previewGrid">
+        <!-- Filled by JS -->
+      </div>
+      <a href="/year/1990" class="btn btn-primary explore-btn" id="exploreBtn">
+        Explore 1990 →
+      </a>
+    </div>
+  </section>
+
+  <!-- DECADE CARDS -->
+  <section class="decades-section">
+    <div class="section-label reveal">Browse by Era</div>
+    <h2 class="reveal">Explore the Decades</h2>
+    <p class="section-subtitle reveal">Each era had its own rhythm, its own revolution</p>
+
+    <div class="decades-grid" data-stagger>
+      {decades.map(([key, decade]) => (
+        <a 
+          href={`/decades#${key}`}
+          class="decade-card"
+          style={`--card-gradient: linear-gradient(135deg, ${decade.color_primary}, ${decade.color_secondary}); --card-glow: ${decade.color_primary}30;`}
+        >
+          <div class="decade-card-name">{decade.name.replace('The ', '')}</div>
+          <div class="decade-card-tagline">{decade.tagline}</div>
+          <div class="decade-card-arrow">→</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- QUICK COMPARE -->
+  <section class="compare-section">
+    <div class="section-label reveal">Side by Side</div>
+    <h2 class="reveal">Compare Two Eras</h2>
+    <p class="section-subtitle reveal">See how much the world changed between any two years</p>
+
+    <div class="compare-form reveal">
+      <div class="compare-select-wrap">
+        <span class="compare-label">From</span>
+        <select class="compare-select" id="compareYear1">
+          {availableYears.map(year => (
+            <option value={year} selected={year === '1960'}>{year}</option>
+          ))}
+        </select>
+      </div>
+
+      <span class="compare-vs">VS</span>
+
+      <div class="compare-select-wrap">
+        <span class="compare-label">To</span>
+        <select class="compare-select" id="compareYear2">
+          {availableYears.map(year => (
+            <option value={year} selected={year === '2020'}>{year}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+
+    <a href="/compare?y1=1960&y2=2020" class="btn btn-primary explore-btn reveal" id="compareBtn">
+      Compare Years →
+    </a>
+  </section>
+
+  <!-- FACTS MARQUEE -->
+  <section class="facts-section">
+    <h2 class="reveal gradient-text">Did You Know?</h2>
+    <div class="facts-marquee">
+      <div class="facts-track">
+        <div class="fact-card">
+          <div class="fact-year">1950</div>
+          <div class="fact-text">A gallon of gas cost just 27 cents</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">1960</div>
+          <div class="fact-text">The first laser was built — now used in everything from surgery to barcode scanners</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">1970</div>
+          <div class="fact-text">The first Earth Day was celebrated, launching the environmental movement</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">1980</div>
+          <div class="fact-text">Pac-Man was released and became the best-selling arcade game of all time</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">1990</div>
+          <div class="fact-text">Tim Berners-Lee invented the World Wide Web — changing everything</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">2000</div>
+          <div class="fact-text">The Y2K bug turned out to be a non-event after billions spent fixing it</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">2010</div>
+          <div class="fact-text">Instagram launched and had 1 million users within 2 months</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">2020</div>
+          <div class="fact-text">COVID-19 vaccines were developed in under a year using mRNA technology</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">2025</div>
+          <div class="fact-text">AI agents went mainstream — coding, writing, and reasoning alongside humans</div>
+        </div>
+        <!-- Duplicate for seamless loop -->
+        <div class="fact-card">
+          <div class="fact-year">1950</div>
+          <div class="fact-text">A gallon of gas cost just 27 cents</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">1960</div>
+          <div class="fact-text">The first laser was built — now used in everything from surgery to barcode scanners</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">1970</div>
+          <div class="fact-text">The first Earth Day was celebrated, launching the environmental movement</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">1980</div>
+          <div class="fact-text">Pac-Man was released and became the best-selling arcade game of all time</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">1990</div>
+          <div class="fact-text">Tim Berners-Lee invented the World Wide Web — changing everything</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">2000</div>
+          <div class="fact-text">The Y2K bug turned out to be a non-event after billions spent fixing it</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">2010</div>
+          <div class="fact-text">Instagram launched and had 1 million users within 2 months</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">2020</div>
+          <div class="fact-text">COVID-19 vaccines were developed in under a year using mRNA technology</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-year">2025</div>
+          <div class="fact-text">AI agents went mainstream — coding, writing, and reasoning alongside humans</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script define:vars={{ yearsData, availableYears }}>
+    // Year Slider Logic
+    const slider = document.getElementById('yearSlider');
+    const display = document.getElementById('yearDisplay');
+    const preview = document.getElementById('yearPreview');
+    const previewGrid = document.getElementById('previewGrid');
+    const exploreBtn = document.getElementById('exploreBtn');
+
+    function getDecade(year) {
+      const d = Math.floor(year / 10) * 10;
+      return d + 's';
+    }
+
+    function getDecadeGradient(decade) {
+      const gradients = {
+        '1950s': 'linear-gradient(135deg, #D4A574, #8B6914)',
+        '1960s': 'linear-gradient(135deg, #9B59B6, #E67E22)',
+        '1970s': 'linear-gradient(135deg, #8B7355, #6B8E23)',
+        '1980s': 'linear-gradient(135deg, #FF006E, #00F5FF)',
+        '1990s': 'linear-gradient(135deg, #00D4AA, #4169E1)',
+        '2000s': 'linear-gradient(135deg, #C0C0C0, #1E90FF)',
+        '2010s': 'linear-gradient(135deg, #7C3AED, #06B6D4)',
+        '2020s': 'linear-gradient(135deg, #10B981, #F59E0B)',
+      };
+      return gradients[decade] || gradients['1990s'];
+    }
+
+    function findClosestYear(targetYear) {
+      const years = Object.keys(yearsData).map(Number).sort((a, b) => a - b);
+      let closest = years[0];
+      let minDiff = Math.abs(targetYear - closest);
+      for (const y of years) {
+        const diff = Math.abs(targetYear - y);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closest = y;
+        }
+      }
+      return String(closest);
+    }
+
+    function formatPopulation(val) {
+      if (val >= 1000000000) return (val / 1000000000).toFixed(1) + 'B';
+      if (val >= 1000000) return (val / 1000000).toFixed(0) + 'M';
+      return val.toLocaleString();
+    }
+
+    function updatePreview(yearVal) {
+      const year = findClosestYear(parseInt(yearVal));
+      const data = yearsData[year];
+      if (!data) return;
+
+      const decade = getDecade(parseInt(year));
+      display.textContent = yearVal;
+      display.style.background = getDecadeGradient(decade);
+      display.style.webkitBackgroundClip = 'text';
+      display.style.webkitTextFillColor = 'transparent';
+      display.style.backgroundClip = 'text';
+
+      previewGrid.innerHTML = `
+        <div class="preview-item">
+          <div class="preview-icon">🌍</div>
+          <div class="preview-value">${formatPopulation(data.population.value)}</div>
+          <div class="preview-label">Population</div>
+        </div>
+        <div class="preview-item">
+          <div class="preview-icon">🎵</div>
+          <div class="preview-value">${data.music.number_one}</div>
+          <div class="preview-label">#1 Song</div>
+        </div>
+        <div class="preview-item">
+          <div class="preview-icon">👔</div>
+          <div class="preview-value">${data.leaders.us_president.split('/')[0].split('(')[0].trim()}</div>
+          <div class="preview-label">US President</div>
+        </div>
+        <div class="preview-item">
+          <div class="preview-icon">🎬</div>
+          <div class="preview-value">${data.movies.number_one}</div>
+          <div class="preview-label">#1 Movie</div>
+        </div>
+        <div class="preview-item">
+          <div class="preview-icon">⛽</div>
+          <div class="preview-value">$${data.prices.gas_gallon.toFixed(2)}</div>
+          <div class="preview-label">Gas / Gallon</div>
+        </div>
+        <div class="preview-item">
+          <div class="preview-icon">🔬</div>
+          <div class="preview-value">${data.technology[0]?.substring(0, 25)}${data.technology[0]?.length > 25 ? '...' : ''}</div>
+          <div class="preview-label">Key Tech</div>
+        </div>
+      `;
+
+      exploreBtn.href = `/year/${year}`;
+      exploreBtn.textContent = `Explore ${year} →`;
+      preview.classList.add('visible');
+    }
+
+    slider.addEventListener('input', (e) => {
+      updatePreview(e.target.value);
+    });
+
+    // Initialize
+    updatePreview('1990');
+
+    // Compare Logic
+    const compareYear1 = document.getElementById('compareYear1');
+    const compareYear2 = document.getElementById('compareYear2');
+    const compareBtn = document.getElementById('compareBtn');
+
+    function updateCompareLink() {
+      const y1 = compareYear1.value;
+      const y2 = compareYear2.value;
+      compareBtn.href = `/compare?y1=${y1}&y2=${y2}`;
+      compareBtn.textContent = `Compare ${y1} vs ${y2} →`;
+    }
+
+    compareYear1.addEventListener('change', updateCompareLink);
+    compareYear2.addEventListener('change', updateCompareLink);
+    updateCompareLink();
+  </script>
+</Layout>

@@ -1,0 +1,266 @@
+---
+import Layout from '../layouts/Layout.astro';
+import decadesData from '../data/decades.json';
+import yearsData from '../data/years.json';
+
+const decades = Object.entries(decadesData);
+---
+
+<Layout title="Decade Explorer">
+  <style>
+    .decades-hero {
+      min-height: 40vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 2rem 3rem;
+    }
+    .decades-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 1rem;
+    }
+
+    /* Decade Panel */
+    .decade-panel {
+      padding: 5rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .decade-panel + .decade-panel {
+      border-top: 1px solid rgba(255,255,255,0.03);
+    }
+    .panel-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.06;
+      pointer-events: none;
+    }
+    .panel-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+      z-index: 1;
+    }
+    .panel-decade-name {
+      font-family: var(--font-heading);
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .panel-tagline {
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+    .panel-vibe {
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.8rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Content Grids */
+    .panel-section-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      margin-top: 2.5rem;
+    }
+    .panel-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.8rem;
+    }
+    .panel-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      transition: all 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+    .panel-item:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+    .panel-item-icon {
+      margin-right: 0.5rem;
+    }
+
+    /* Explore Years */
+    .panel-years {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .panel-year-link {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0.6rem 1.5rem;
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      z-index: 1;
+    }
+    .panel-year-link:hover {
+      transform: translateY(-3px) scale(1.05);
+    }
+
+    /* Decade Nav Dots */
+    .decade-nav-dots {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      z-index: 100;
+    }
+    .decade-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      padding: 0;
+    }
+    .decade-dot:hover, .decade-dot.active {
+      transform: scale(1.5);
+      background: var(--accent-primary);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+    .decade-dot-label {
+      display: none;
+      position: absolute;
+      right: 20px;
+      white-space: nowrap;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      background: var(--bg-surface);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+    .decade-dot:hover .decade-dot-label {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .decade-nav-dots { display: none; }
+      .panel-items { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <!-- Hero -->
+  <section class="decades-hero">
+    <h1 class="reveal"><span class="gradient-text">Explore the Decades</span></h1>
+    <p class="text-secondary reveal">Each era had its own rhythm, its own revolution, its own soul</p>
+  </section>
+
+  <!-- Side Navigation Dots -->
+  <nav class="decade-nav-dots" id="decadeNavDots">
+    {decades.map(([key, decade]) => (
+      <a href={`#${key}`} class="decade-dot" title={decade.name} style={`--dot-color: ${decade.color_primary};`}>
+        <span class="decade-dot-label">{decade.name}</span>
+      </a>
+    ))}
+  </nav>
+
+  <!-- Decade Panels -->
+  {decades.map(([key, decade]) => (
+    <section class="decade-panel" id={key}>
+      <div class="panel-glow" style={`background: radial-gradient(circle, ${decade.color_primary}, transparent);`}></div>
+      
+      <div class="panel-header reveal">
+        <div class="panel-decade-name" style={`background: linear-gradient(135deg, ${decade.color_primary}, ${decade.color_secondary}); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;`}>
+          {decade.name}
+        </div>
+        <div class="panel-tagline">{decade.tagline}</div>
+        <div class="panel-vibe">{decade.vibe}</div>
+      </div>
+
+      <div class="panel-section-title reveal" style={`color: ${decade.color_primary};`}>
+        📌 Defining Events
+      </div>
+      <div class="panel-items" data-stagger>
+        {decade.defining_events.map(event => (
+          <div class="panel-item reveal info-clickable" onclick="openInfoModal(this.innerText, 'event')">
+            <span class="panel-item-icon">✦</span>{event}
+          </div>
+        ))}
+      </div>
+
+      <div class="panel-section-title reveal" style={`color: ${decade.color_primary};`}>
+        🎵 Music Icons
+      </div>
+      <div class="panel-items" data-stagger>
+        {decade.music_icons.map(artist => (
+          <div class="panel-item reveal info-clickable" onclick="openInfoModal(this.innerText, 'musician')">
+            <span class="panel-item-icon">♪</span>{artist}
+          </div>
+        ))}
+      </div>
+
+      <div class="panel-section-title reveal" style={`color: ${decade.color_primary};`}>
+        🎬 Iconic Movies
+      </div>
+      <div class="panel-items" data-stagger>
+        {decade.movie_icons.map(movie => (
+          <div class="panel-item reveal info-clickable" onclick="openInfoModal(this.innerText, 'film')">
+            <span class="panel-item-icon">🎥</span>{movie}
+          </div>
+        ))}
+      </div>
+
+      <div class="panel-section-title reveal" style={`color: ${decade.color_primary};`}>
+        ⚡ Tech Breakthroughs
+      </div>
+      <div class="panel-items" data-stagger>
+        {decade.tech_breakthroughs.map(tech => (
+          <div class="panel-item reveal info-clickable" onclick="openInfoModal(this.innerText, 'technology')">
+            <span class="panel-item-icon">💡</span>{tech}
+          </div>
+        ))}
+      </div>
+
+      <div class="panel-years" data-stagger>
+        {decade.years.map(y => (
+          <a 
+            href={`/year/${y}`} 
+            class="panel-year-link reveal-scale"
+            style={`background: rgba(255,255,255,0.05); border: 1px solid ${decade.color_primary}40; color: ${decade.color_primary};`}
+          >
+            Explore {y}
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</Layout>
