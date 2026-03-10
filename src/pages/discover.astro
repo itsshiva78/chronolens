@@ -5,6 +5,7 @@ import countriesData from '../data/countries.json';
 
 const availableYears = Object.keys(yearsData).map(Number).sort((a, b) => a - b);
 const countries = Object.keys(countriesData).sort();
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Discover Your Year">
@@ -617,7 +618,7 @@ const countries = Object.keys(countriesData).sort();
   <!-- Start Over Button -->
   <button class="start-over-btn" id="startOverBtn">⟲ Start Over</button>
 
-  <script define:vars={{ yearsData, countriesData, availableYears }}>
+  <script define:vars={{ yearsData, countriesData, availableYears, baseUrl }}>
     const form = document.getElementById('discoverForm');
     const formSection = document.getElementById('formSection');
     const resultsWrapper = document.getElementById('resultsWrapper');
@@ -983,8 +984,8 @@ const countries = Object.keys(countriesData).sort();
         <div class="discover-cta reveal">
           <p>Want to dive deeper into ${closestYear}?</p>
           <div class="cta-links">
-            <a href="/year/${closestYear}" class="btn btn-primary">Explore ${closestYear} in Full →</a>
-            <a href="/compare?y1=${closestYear}&y2=2025" class="btn btn-outline">Compare ${closestYear} vs 2025 →</a>
+            <a href="${baseUrl}year/${closestYear}" class="btn btn-primary">Explore ${closestYear} in Full →</a>
+            <a href="${baseUrl}compare?y1=${closestYear}&y2=2025" class="btn btn-outline">Compare ${closestYear} vs 2025 →</a>
           </div>
         </div>
       `;

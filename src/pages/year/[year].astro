@@ -6,7 +6,7 @@ const { year } = Astro.params;
 const data = yearsData[year as keyof typeof yearsData];
 
 if (!data) {
-  return Astro.redirect('/');
+  return Astro.redirect(import.meta.env.BASE_URL);
 }
 
 const allYears = Object.keys(yearsData).map(Number).sort((a, b) => a - b);
@@ -568,9 +568,9 @@ export function getStaticPaths() {
 
   <!-- Year Sub-Nav -->
   <div class="year-nav">
-    {prevYear && <a href={`/year/${prevYear}`}>◄ {prevYear}</a>}
+    {prevYear && <a href={`${import.meta.env.BASE_URL}year/${prevYear}`}>◄ {prevYear}</a>}
     <span class="current-year">{year}</span>
-    {nextYear && <a href={`/year/${nextYear}`}>{nextYear} ►</a>}
+    {nextYear && <a href={`${import.meta.env.BASE_URL}year/${nextYear}`}>{nextYear} ►</a>}
   </div>
 
   <!-- Year Hero -->
@@ -878,9 +878,9 @@ export function getStaticPaths() {
 
   <!-- Year Footer Nav -->
   <div class="year-footer-nav reveal">
-    {prevYear && <a href={`/year/${prevYear}`}>◄ {prevYear}</a>}
-    <a href="/" style="background: var(--accent-gradient); color: var(--bg-deep); border: none;">All Years</a>
-    {nextYear && <a href={`/year/${nextYear}`}>{nextYear} ►</a>}
+    {prevYear && <a href={`${import.meta.env.BASE_URL}year/${prevYear}`}>◄ {prevYear}</a>}
+    <a href={import.meta.env.BASE_URL} style="background: var(--accent-gradient); color: var(--bg-deep); border: none;">All Years</a>
+    {nextYear && <a href={`${import.meta.env.BASE_URL}year/${nextYear}`}>{nextYear} ►</a>}
   </div>
 
   <script>

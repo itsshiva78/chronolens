@@ -5,6 +5,7 @@ import decadesData from '../data/decades.json';
 
 const availableYears = Object.keys(yearsData).sort();
 const decades = Object.entries(decadesData);
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <Layout title="ChronoLens — Travel Through Time">
@@ -486,7 +487,7 @@ const decades = Object.entries(decadesData);
       the prices, the breakthroughs, and the moments that shaped humanity.
     </p>
 
-    <a href="/discover" class="btn btn-primary reveal" style="margin-bottom: 2rem; font-size: 1.1rem; padding: 1rem 2.5rem;">
+    <a href={`${import.meta.env.BASE_URL}discover`} class="btn btn-primary reveal" style="margin-bottom: 2rem; font-size: 1.1rem; padding: 1rem 2.5rem;">
       🔭 Discover Your Year →
     </a>
 
@@ -545,7 +546,7 @@ const decades = Object.entries(decadesData);
       <div class="preview-grid" id="previewGrid">
         <!-- Filled by JS -->
       </div>
-      <a href="/year/1990" class="btn btn-primary explore-btn" id="exploreBtn">
+      <a href={`${import.meta.env.BASE_URL}year/1990`} class="btn btn-primary explore-btn" id="exploreBtn">
         Explore 1990 →
       </a>
     </div>
@@ -560,7 +561,7 @@ const decades = Object.entries(decadesData);
     <div class="decades-grid" data-stagger>
       {decades.map(([key, decade]) => (
         <a 
-          href={`/decades#${key}`}
+          href={`${import.meta.env.BASE_URL}decades#${key}`}
           class="decade-card"
           style={`--card-gradient: linear-gradient(135deg, ${decade.color_primary}, ${decade.color_secondary}); --card-glow: ${decade.color_primary}30;`}
         >
@@ -600,7 +601,7 @@ const decades = Object.entries(decadesData);
       </div>
     </div>
 
-    <a href="/compare?y1=1960&y2=2020" class="btn btn-primary explore-btn reveal" id="compareBtn">
+    <a href={`${import.meta.env.BASE_URL}compare?y1=1960&y2=2020`} class="btn btn-primary explore-btn reveal" id="compareBtn">
       Compare Years →
     </a>
   </section>
@@ -687,7 +688,7 @@ const decades = Object.entries(decadesData);
     </div>
   </section>
 
-  <script define:vars={{ yearsData, availableYears }}>
+  <script define:vars={{ yearsData, availableYears, baseUrl }}>
     // Year Slider Logic
     const slider = document.getElementById('yearSlider');
     const display = document.getElementById('yearDisplay');
@@ -779,7 +780,7 @@ const decades = Object.entries(decadesData);
         </div>
       `;
 
-      exploreBtn.href = `/year/${year}`;
+      exploreBtn.href = `${baseUrl}year/${year}`;
       exploreBtn.textContent = `Explore ${year} →`;
       preview.classList.add('visible');
     }
@@ -799,7 +800,7 @@ const decades = Object.entries(decadesData);
     function updateCompareLink() {
       const y1 = compareYear1.value;
       const y2 = compareYear2.value;
-      compareBtn.href = `/compare?y1=${y1}&y2=${y2}`;
+      compareBtn.href = `${baseUrl}compare?y1=${y1}&y2=${y2}`;
       compareBtn.textContent = `Compare ${y1} vs ${y2} →`;
     }
 

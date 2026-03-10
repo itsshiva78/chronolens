@@ -253,7 +253,7 @@ const decades = Object.entries(decadesData);
       <div class="panel-years" data-stagger>
         {decade.years.map(y => (
           <a 
-            href={`/year/${y}`} 
+            href={`${import.meta.env.BASE_URL}year/${y}`} 
             class="panel-year-link reveal-scale"
             style={`background: rgba(255,255,255,0.05); border: 1px solid ${decade.color_primary}40; color: ${decade.color_primary};`}
           >
